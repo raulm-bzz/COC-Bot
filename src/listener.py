@@ -43,7 +43,6 @@ def on_press(key):
         pass
 
 
-
 def print_banner():
     print("""
 
@@ -62,6 +61,7 @@ Hotkeys:""")
 Now listening...
       
 """)
+
 
 
 print_banner()
