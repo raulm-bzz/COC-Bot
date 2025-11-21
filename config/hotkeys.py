@@ -1,0 +1,6 @@
+KEY_START_FIND = 'a'
+KEY_ATTACK = 's'
+KEY_SURRENDER = 'd'
+
+KEY_RECORD = '0'
+KEY_KILL = '$'

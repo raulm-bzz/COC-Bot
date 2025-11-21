@@ -2,88 +2,18 @@ from pynput import keyboard
 from pynput.keyboard import Controller
 import pyautogui
 import time
+import sys
+import os
 
-keyboard = Controller()
+config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "config"))
+sys.path.append(config_path)
 
-# --- EDIT THESE POSITIONS FOR YOUR CLICK SEQUENCE ---
-CORDS_START_FIND = [
-    (197, 928),
-    (352, 732),
-    (1614, 881)
-]
+from coordinates import *
+from hotkeys import *
 
-CORDS_SURRENDER = [
-    (211, 877),
-    (1157, 652),
-    (993, 888)
-]
-
-CORDS_VALKS = [
-    (290, 490),
-    (348, 452),
-    (359, 413),
-    (393, 392),
-    (427, 370),
-    (447, 355),
-    (503, 319),
-    (533, 300),
-    (573, 268),
-    (603, 249),
-    (632, 230),
-    (663, 211),
-    (704, 180),
-    (759, 131),
-    (790, 108),
-    (826, 77),
-    (872, 57),
-    (1077, 48),
-    (1124, 74),
-    (1170, 96),
-    (1216, 117),
-    (1246, 146),
-    (1294, 182),
-    (1336, 220),
-    (1367, 242),
-    (1434, 291),
-    (1485, 324),
-    (1560, 375),
-    (1623, 429),
-    (1670, 465),
-    (1684, 513),
-    (1646, 560),
-    (1587, 611),
-    (1521, 657),
-    (1456, 696),
-    (1416, 724),
-    (1378, 755),
-    (1331, 803),
-    (1280, 844),
-    (1219, 889)
-]
-
-CORDS_HEROS = [
-    (639, 790)
-    ]
-
-CORDS_EARTHQUAKES = [
-    (758, 311),
-    (758, 311),
-    (758, 311),
-    (758, 311),
-    (1234, 311),
-    (1234, 311),
-    (1234, 311),
-    (1234, 311)
-]
+controller = Controller()
 
 
-# in order
-KEY_START_FIND = 'a'
-KEY_ATTACK = 's'
-KEY_SURRENDER = 'd'
-
-KEY_RECORD = '0'
-KEY_KILL = '$'
 
 
 def on_press(key):
@@ -124,8 +54,8 @@ def on_press(key):
             keys_to_press = ['q', 'w', 'e', 'r']
 
             for key in keys_to_press:
-                keyboard.press(key)    # press key
-                keyboard.release(key)  # release key
+                controller.press(key)    # press key via controller 
+                controller.release(key)  # release key via controller
                 time.sleep(0.2)
 
 
