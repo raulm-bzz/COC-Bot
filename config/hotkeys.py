@@ -1,6 +1,8 @@
-KEY_START_FIND = 'a'
-KEY_ATTACK = 's'
-KEY_SURRENDER = 'd'
-
-KEY_RECORD = '0'
-KEY_KILL = '$'
+#dictionary of hotkeys and their descriptions
+HOTKEYS = {
+    "START_FIND":  { "key": "a", "description": "Start Find" },
+    "ATTACK":      { "key": "s", "description": "Attack" },
+    "SURRENDER":   { "key": "d", "description": "Surrender" },
+    "RECORD":      { "key": "0", "description": "Record Click" },
+    "KILL":        { "key": "$", "description": "Kill Script" }
+}

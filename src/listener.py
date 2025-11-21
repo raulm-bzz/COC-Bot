@@ -5,6 +5,7 @@ import time
 import sys
 import os
 from actions import *
+controller = Controller()
 
 config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "config"))
 sys.path.append(config_path)
@@ -12,7 +13,10 @@ sys.path.append(config_path)
 from coordinates import *
 from hotkeys import *
 
-controller = Controller()
+globals().update({
+    f"KEY_{name}": data["key"]
+    for name, data in HOTKEYS.items()
+})
 
 
 
@@ -39,6 +43,27 @@ def on_press(key):
         pass
 
 
-print("---> Listening <--- \nAvailable hotkeys:")
+
+def print_banner():
+    print("""
+
+
+*******************************
+*        COC Attack Bot       *
+*******************************
+
+Hotkeys:""")
+    
+    # auto-generate each hotkey line with nice spacing
+    for name, data in HOTKEYS.items():
+        print(f"    {data['key']:<12} : {data['description']}")
+    
+    print("""
+Now listening...
+      
+""")
+
+
+print_banner()
 with keyboard.Listener(on_press=on_press) as listener:
     listener.join()
