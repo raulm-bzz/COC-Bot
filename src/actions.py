@@ -11,6 +11,7 @@ sys.path.append(config_path)
 from coordinates import *
 from hotkeys import *
 
+controller = Controller()
 
 def start_find(key):
     print(f"Hotkey '{KEY_START_FIND}' pressed. Function 'start_find' called.")
@@ -45,16 +46,16 @@ def attack(key):
         controller.press(key)    # press key via controller 
         controller.release(key)  # release key via controller
         time.sleep(0.2)
-def start_find(key):
-    print(f"Hotkey '{KEY_SURRENDER}' pressed. Function 'start_find' called.")
+def surrender(key):
+    print(f"Hotkey '{KEY_SURRENDER}' pressed. Function 'surrender' called.")
     for x, y in CORDS_SURRENDER:
         pyautogui.click(x, y)
         time.sleep(0.3)
 # Record cursor position
-def start_find(key):
+def record_position(key):
     pos = pyautogui.position()
     print(f"Recorded position: {pos}")
           
-def start_find(key):
+def kill_programm(key):
     print("Exiting program.")
     return False 
