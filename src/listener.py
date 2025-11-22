@@ -49,7 +49,6 @@ def on_press(key):
             gold = results[0]
             elixir = results[1]
             dark = results[2]
-            print(f"Gold: {gold}, Elixir: {elixir}, Dark: {dark}")
         
     except AttributeError:
         pass
