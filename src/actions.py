@@ -53,7 +53,7 @@ def attack(key):
         controller.release(key)  # release key via controller
         time.sleep(0.2)
 
-def surrender(key):
+def surrender(key, duration=0.0):
     print(f"Hotkey {key} pressed. Function 'surrender' called.")
     for i, (x, y) in enumerate(CORDS_SURRENDER):
         pyautogui.click(x, y)
@@ -62,7 +62,7 @@ def surrender(key):
                 print("Second click done, getting loot data...")
                 time.sleep(3)
                 results = get_all_loot(key)
-                save_loot_data(results)
+                save_loot_data(results, duration)
                 print(results)
                 time.sleep(1)
 
@@ -76,7 +76,7 @@ def kill_programm(key):
     print("Exiting program.")
     return False
 
-def save_loot_data(loot_data, filepath="data/loot_data.json"):
+def save_loot_data(loot_data, duration, filepath="data/loot_data.json"):
     if not os.path.exists(filepath):
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump([], f, indent=4)
@@ -93,6 +93,7 @@ def save_loot_data(loot_data, filepath="data/loot_data.json"):
     # Add timestamp automatically
     loot_entry = {
         "timestamp": datetime.now().isoformat(timespec="seconds"),
+        "duration": duration,
         **loot_data
     }
     data.append(loot_entry)
@@ -135,6 +136,7 @@ def check_for_end_battle():
     return detected_text
     
 def auto_attack(key):
+    start_time = time.time()
     print(f"Hotkey {key} pressed. Function 'auto_attack' called.")
     start_find(key)
 
@@ -145,7 +147,8 @@ def auto_attack(key):
     time.sleep(10)              # Delay for % analysation to start
     while analyse(key) <= 50:   
         time.sleep(3)           # Delay between analysations (to avoid spamming)
-    surrender(key)
+    duration = time.time() - start_time
+    surrender(key, duration + 5)
     print("Auto attack cycle COMPLETED.")
 
 
