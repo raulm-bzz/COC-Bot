@@ -4,6 +4,8 @@ import pyautogui
 import time
 import sys
 import os
+import json
+from datetime import datetime
 from PIL import ImageGrab
 import easyocr
 import numpy as np
@@ -60,6 +62,7 @@ def surrender(key):
                 print("Second click done, getting loot data...")
                 time.sleep(3)
                 results = get_all_loot(key)
+                save_loot_data(results)
                 print(results)
                 time.sleep(1)
 
@@ -72,6 +75,31 @@ def record_position(key):
 def kill_programm(key):
     print("Exiting program.")
     return False
+
+def save_loot_data(loot_data, filepath="data/loot_data.json"):
+    if not os.path.exists(filepath):
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump([], f, indent=4)
+
+    # Load existing data
+    with open(filepath, "r", encoding="utf-8") as f:
+        try:
+            data = json.load(f)
+            if not isinstance(data, list):
+                data = []  # Safety fallback
+        except json.JSONDecodeError:
+            data = []  # If file is corrupt, reset it
+
+    # Add timestamp automatically
+    loot_entry = {
+        "timestamp": datetime.now().isoformat(timespec="seconds"),
+        **loot_data
+    }
+    data.append(loot_entry)
+
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
+    print("Loot data saved.")
 
 def analyse(key):
     print(f"Hotkey {key} pressed. Function 'analyse' called.")
