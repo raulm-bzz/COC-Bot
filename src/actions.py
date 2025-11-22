@@ -109,7 +109,7 @@ def auto_attack(key):
     print(f"Hotkey {key} pressed. Function 'auto_attack' called.")
     start_find(key)
 
-    while check_for_end_battle() != None:   # Wait until Cloud search is over
+    while check_for_end_battle() != "End Battle":   # Wait until Cloud search is over
         time.sleep(1.5)
     time.sleep(1)               # Additional delay to ensure everything is loaded
     attack(key)
