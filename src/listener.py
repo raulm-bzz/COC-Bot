@@ -10,7 +10,6 @@ controller = Controller()
 config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "config"))
 sys.path.append(config_path)
 
-from coordinates import *
 from hotkeys import *
 
 globals().update({
@@ -42,11 +41,11 @@ def on_press(key):
         elif key.char == KEY_KILL:
             return kill_programm(key)
         
-
+        elif key.char == KEY_AUTO_ATTACK:  # debug key
+            auto_attack(key)
         
     except AttributeError:
         pass
-
 
 def print_banner():
     print("""
@@ -67,8 +66,7 @@ Now listening...
       
 """)
 
-
-
 print_banner()
+
 with keyboard.Listener(on_press=on_press) as listener:
     listener.join()

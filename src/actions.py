@@ -78,4 +78,15 @@ def analyse(key):
 
     elapsed = time.time() - start_time
     print(f"{detected_text} in {elapsed:.4f}s")
+    return int(detected_text)
     
+def auto_attack(key):
+    print(f"Hotkey {key} pressed. Function 'auto_attack' called.")
+    start_find(key)
+    time.sleep(5)               # Delay for time in Clouds
+    attack(key)
+    time.sleep(10)              # Delay for % analysation to start
+    while analyse(key) <= 50:   
+        time.sleep(3)           # Delay between analysations (to avoid spamming)
+    surrender(key)
+    print("Auto attack cycle COMPLETED.")
