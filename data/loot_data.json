@@ -48,5 +48,70 @@
         "total_gold": 426381,
         "total_elixir": 414862,
         "total_dark": 2556
+    },
+    {
+        "timestamp": "2025-11-22T18:46:46",
+        "duration": 38.98357677459717,
+        "gold_main": 42482,
+        "elixir_main": 228410,
+        "dark_main": 90,
+        "gold_bonus": 282200,
+        "elixir_bonus": 282200,
+        "dark_bonus": 2075,
+        "total_gold": 324682,
+        "total_elixir": 510610,
+        "total_dark": 2165
+    },
+    {
+        "timestamp": "2025-11-22T18:48:35",
+        "duration": 37.38153886795044,
+        "gold_main": 337330,
+        "elixir_main": 308423,
+        "dark_main": 4216,
+        "gold_bonus": 282200,
+        "elixir_bonus": 282200,
+        "dark_bonus": 2075,
+        "total_gold": 619530,
+        "total_elixir": 590623,
+        "total_dark": 6291
+    },
+    {
+        "timestamp": "2025-11-22T18:50:57",
+        "duration": 35.83696889877319,
+        "gold_main": 169801,
+        "elixir_main": 257874,
+        "dark_main": 3264,
+        "gold_bonus": 326400,
+        "elixir_bonus": 326400,
+        "dark_bonus": 2400,
+        "total_gold": 496201,
+        "total_elixir": 584274,
+        "total_dark": 5664
+    },
+    {
+        "timestamp": "2025-11-22T19:06:09",
+        "duration": 32.71493577957153,
+        "gold_main": 341196,
+        "elixir_main": 474871,
+        "dark_main": 4342,
+        "gold_bonus": 306000,
+        "elixir_bonus": 306000,
+        "dark_bonus": 2250,
+        "total_gold": 647196,
+        "total_elixir": 780871,
+        "total_dark": 6592
+    },
+    {
+        "timestamp": "2025-11-22T19:09:11",
+        "duration": 32.684415102005005,
+        "gold_main": 659972,
+        "elixir_main": 553050,
+        "dark_main": 6473,
+        "gold_bonus": 295800,
+        "elixir_bonus": 295800,
+        "dark_bonus": 2175,
+        "total_gold": 955772,
+        "total_elixir": 848850,
+        "total_dark": 8648
     }
 ]

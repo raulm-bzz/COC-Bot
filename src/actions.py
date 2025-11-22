@@ -72,9 +72,10 @@ def record_position(key):
     pos = pyautogui.position()
     print(f"Recorded position: {pos}")
           
-def kill_programm(key):
+def kill_programm(key, executor):
     print("Exiting program.")
-    return False
+    executor.shutdown(wait=False)
+    os._exit(0)
 
 def save_loot_data(loot_data, duration, filepath="data/loot_data.json"):
     if not os.path.exists(filepath):

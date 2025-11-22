@@ -4,7 +4,11 @@ import time
 import sys
 import os
 from actions import *
+from concurrent.futures import ThreadPoolExecutor
+import threading
 controller = Controller()
+
+executor = ThreadPoolExecutor(max_workers=2)
 
 
 config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "config"))
@@ -18,37 +22,32 @@ globals().update({
 })
 
 
-
-
 def on_press(key):
     try:
-        if key.char == KEY_START_FIND:
-            start_find(key)
+        # hotkey → function mapping
+        mapping = {
+            KEY_START_FIND: start_find,
+            KEY_ATTACK: attack,
+            KEY_SURRENDER: surrender,
+            KEY_RECORD: record_position,
+            KEY_ANALYSE: analyse,
+            KEY_AUTO_ATTACK: auto_attack
+        }
 
-        elif key.char == KEY_ATTACK:
-            attack(key)
+        # handle special kill key first
+        if hasattr(key, "char") and key.char == KEY_KILL:
+            kill_programm(key, executor)
+            return False
 
+        # process normal mapped hotkeys
+        if hasattr(key, "char"):
+            func = mapping.get(key.char)
+            if func:
+                executor.submit(func, key)  # run ONCE via executor
 
-        elif key.char == KEY_SURRENDER:
-            surrender(key)
-
-        elif key.char == KEY_RECORD:
-            record_position(key)
-
-        elif key.char == KEY_ANALYSE:
-            analyse(key)
-
-        elif key.char == KEY_KILL:
-            return kill_programm(key)
-        
-        elif key.char == KEY_AUTO_ATTACK:
-            auto_attack(key)
-
-        elif key.char == KEY_TEST:
-            pass
-        
     except AttributeError:
         pass
+
 
 def print_banner():
     print("""
