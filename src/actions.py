@@ -4,6 +4,9 @@ import pyautogui
 import time
 import sys
 import os
+from PIL import ImageGrab
+import easyocr
+import numpy as np
 
 config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "config"))
 sys.path.append(config_path)
@@ -12,6 +15,7 @@ from coordinates import *
 from hotkeys import *
 
 controller = Controller()
+reader = easyocr.Reader(['en'])
 
 def start_find(key):
     print(f"Hotkey {key} pressed. Function 'start_find' called.")
@@ -60,3 +64,18 @@ def kill_programm(key):
     print("Exiting program.")
     return False
 
+def analyse(key):
+    print(f"Hotkey {key} pressed. Function 'analyse' called.")
+    start_time = time.time()
+    region = (1776, 863, 1828, 894)
+    screenshot = ImageGrab.grab(bbox=region)
+
+    img = np.array(screenshot)
+
+    result = reader.readtext(img)
+
+    detected_text = result[0][1]
+
+    elapsed = time.time() - start_time
+    print(f"{detected_text} in {elapsed:.4f}s")
+    
