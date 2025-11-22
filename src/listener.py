@@ -45,10 +45,7 @@ def on_press(key):
             auto_attack(key)
 
         elif key.char == KEY_TEST:
-            results = check_loot_bonus(key)
-            gold = results[0]
-            elixir = results[1]
-            dark = results[2]
+            pass
         
     except AttributeError:
         pass
@@ -75,4 +72,4 @@ Now listening...
 print_banner()
 
 with keyboard.Listener(on_press=on_press) as listener:
-    listener.join() 
+    listener.join()

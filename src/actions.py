@@ -50,6 +50,7 @@ def attack(key):
         controller.press(key)    # press key via controller 
         controller.release(key)  # release key via controller
         time.sleep(0.2)
+
 def surrender(key):
     print(f"Hotkey {key} pressed. Function 'surrender' called.")
     for i, (x, y) in enumerate(CORDS_SURRENDER):
@@ -166,7 +167,7 @@ def check_loot_bonus(key):
 
 def get_all_loot(key):
     gold_main, elixir_main, dark_main = check_loot(key)
-    time.sleep(3)
+    time.sleep(2)
     gold_bonus, elixir_bonus, dark_bonus = check_loot_bonus(key)
     total_gold = gold_main + gold_bonus
     total_elixir = elixir_main + elixir_bonus
