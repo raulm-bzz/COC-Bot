@@ -14,18 +14,18 @@ from hotkeys import *
 controller = Controller()
 
 def start_find(key):
-    print(f"Hotkey '{key}' pressed. Function 'start_find' called.")
+    print(f"Hotkey {key} pressed. Function 'start_find' called.")
     for x, y in CORDS_START_FIND:
         pyautogui.click(x, y)
         time.sleep(0.3)
 
 def attack(key):
-    print(f"Hotkey '{key}' pressed. Function 'attack' called.")
+    print(f"Hotkey {key} pressed. Function 'attack' called.")
     pyautogui.click(1079, 981)
     time.sleep(0.5)
     for x, y in CORDS_EARTHQUAKES:
         pyautogui.click(x, y)
-        time.sleep(0.03)
+        time.sleep(0.08)
     pyautogui.click(640, 975)
     time.sleep(0.5)
     for x, y in CORDS_VALKS:
@@ -47,7 +47,7 @@ def attack(key):
         controller.release(key)  # release key via controller
         time.sleep(0.2)
 def surrender(key):
-    print(f"Hotkey '{key}' pressed. Function 'surrender' called.")
+    print(f"Hotkey {key} pressed. Function 'surrender' called.")
     for x, y in CORDS_SURRENDER:
         pyautogui.click(x, y)
         time.sleep(0.3)

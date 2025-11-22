@@ -4,5 +4,6 @@ HOTKEYS = {
     "ATTACK":      { "key": "s", "description": "Attack" },
     "SURRENDER":   { "key": "d", "description": "Surrender" },
     "RECORD":      { "key": "0", "description": "Record Click" },
-    "KILL":        { "key": "$", "description": "Kill Script" }
+    "KILL":        { "key": "$", "description": "Kill Script" },
+    "ANALYSE":      { "key": "m", "description": "Analyse Area" }
 }
