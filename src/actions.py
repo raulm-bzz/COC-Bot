@@ -53,7 +53,7 @@ def attack(key):
         controller.release(key)  # release key via controller
         time.sleep(0.2)
 
-def surrender(key, duration=0.0):
+def surrender(key, duration=0.0, defeated=True):
     print(f"Hotkey {key} pressed. Function 'surrender' called.")
     for i, (x, y) in enumerate(CORDS_SURRENDER):
         pyautogui.click(x, y)
@@ -61,7 +61,7 @@ def surrender(key, duration=0.0):
         if i == 1:  # after the second tuple (index 1)
                 print("Second click done, getting loot data...")
                 time.sleep(3)
-                results = get_all_loot(key)
+                results = get_all_loot(key, defeated)
                 save_loot_data(results, duration)
                 print(results)
                 time.sleep(1)
@@ -137,20 +137,35 @@ def check_for_end_battle():
     return detected_text
     
 def auto_attack(key):
-    start_time = time.time()
-    print(f"Hotkey {key} pressed. Function 'auto_attack' called.")
-    start_find(key)
+    while True:
+        start_time = time.time()
+        print(f"Hotkey {key} pressed. Function 'auto_attack' called.")
+        start_find(key)
 
-    while check_for_end_battle() != "End Battle":   # Wait until Cloud search is over
-        time.sleep(1.5)
-    time.sleep(1)               # Additional delay to ensure everything is loaded
-    attack(key)
-    time.sleep(10)              # Delay for % analysation to start
-    while analyse(key) <= 50:   
-        time.sleep(3)           # Delay between analysations (to avoid spamming)
-    duration = time.time() - start_time
-    surrender(key, duration + 5)
-    print("Auto attack cycle COMPLETED.")
+        while check_for_end_battle() != "End Battle":   # Wait until Cloud search is over
+            time.sleep(1.5)
+        time.sleep(1)               # Additional delay to ensure everything is loaded
+        attack(key)
+        time.sleep(10)              # Delay for % analysation to start
+        count = 0
+        cache = 1000
+        defeated = False
+        while True:   
+            percentage = analyse(key)
+            if cache == percentage:
+                count += 1
+            cache = percentage
+            if percentage >= 50:
+                break
+            if count >= 5:
+                defeated = True
+                break
+            time.sleep(3)
+
+        duration = time.time() - start_time
+        surrender(key, duration + 5, defeated)
+        print("Auto attack cycle COMPLETED.")
+        time.sleep(5)               # Delay before starting the next cycle
 
 
 
@@ -197,13 +212,21 @@ def check_loot_bonus(key):
         print(f"No text detected or an error occurred")
     return gold, elixir, dark
 
-def get_all_loot(key):
+def get_all_loot(key, defeated):
     gold_main, elixir_main, dark_main = check_loot(key)
     time.sleep(2)
-    gold_bonus, elixir_bonus, dark_bonus = check_loot_bonus(key)
-    total_gold = gold_main + gold_bonus
-    total_elixir = elixir_main + elixir_bonus
-    total_dark = dark_main + dark_bonus
+    if defeated == False:
+        gold_bonus, elixir_bonus, dark_bonus = check_loot_bonus(key)
+        total_gold = gold_main + gold_bonus
+        total_elixir = elixir_main + elixir_bonus
+        total_dark = dark_main + dark_bonus
+    else:
+        total_gold = gold_main
+        total_elixir = elixir_main
+        total_dark = dark_main
+        gold_bonus = 0
+        elixir_bonus = 0
+        dark_bonus = 0
     
     return {
         "gold_main": gold_main,
