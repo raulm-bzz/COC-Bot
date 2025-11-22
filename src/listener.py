@@ -41,8 +41,15 @@ def on_press(key):
         elif key.char == KEY_KILL:
             return kill_programm(key)
         
-        elif key.char == KEY_AUTO_ATTACK:  # debug key
+        elif key.char == KEY_AUTO_ATTACK:
             auto_attack(key)
+
+        elif key.char == KEY_TEST:
+            results = check_loot_bonus(key)
+            gold = results[0]
+            elixir = results[1]
+            dark = results[2]
+            print(f"Gold: {gold}, Elixir: {elixir}, Dark: {dark}")
         
     except AttributeError:
         pass
