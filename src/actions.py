@@ -19,19 +19,19 @@ from hotkeys import *
 controller = Controller()
 reader = easyocr.Reader(['en'])
 
-def start_find(key):
-    print(f"Hotkey {key} pressed. Function 'start_find' called.")
+def start_find():
+    print(f"Function 'start_find' called.")
     for x, y in CORDS_START_FIND:
         pyautogui.click(x, y)
         time.sleep(0.3)
 
-def attack(key):
-    print(f"Hotkey {key} pressed. Function 'attack' called.")
+def attack():
+    print(f"Function 'attack' called.")
     pyautogui.click(1079, 981)
     time.sleep(0.5)
     for x, y in CORDS_EARTHQUAKES:
         pyautogui.click(x, y)
-        time.sleep(0.08)
+        time.sleep(0.1)
     pyautogui.click(640, 975)
     time.sleep(0.5)
     for x, y in CORDS_VALKS:
@@ -53,26 +53,26 @@ def attack(key):
         controller.release(key)  # release key via controller
         time.sleep(0.2)
 
-def surrender(key, duration=0.0, defeated=True):
-    print(f"Hotkey {key} pressed. Function 'surrender' called.")
+def surrender(duration=0.0, defeated=True):
+    print(f"Function 'surrender' called.")
     for i, (x, y) in enumerate(CORDS_SURRENDER):
         pyautogui.click(x, y)
         time.sleep(0.3)
         if i == 1:  # after the second tuple (index 1)
                 print("Second click done, getting loot data...")
                 time.sleep(3)
-                results = get_all_loot(key, defeated)
+                results = get_all_loot(defeated)
                 save_loot_data(results, duration)
                 print(results)
                 time.sleep(1)
 
 
 # Record cursor position
-def record_position(key):
+def record_position():
     pos = pyautogui.position()
     print(f"Recorded position: {pos}")
           
-def kill_programm(key, executor):
+def kill_programm(executor):
     print("Exiting program.")
     executor.shutdown(wait=False)
     os._exit(0)
@@ -103,10 +103,10 @@ def save_loot_data(loot_data, duration, filepath="data/loot_data.json"):
         json.dump(data, f, indent=4)
     print("Loot data saved.")
 
-def analyse(key):
-    print(f"Hotkey {key} pressed. Function 'analyse' called.")
+def analyse():
+    print(f"Function 'analyse' called.")
     start_time = time.time()
-    region = (1776, 863, 1828, 894)
+    region = (1780, 866, 1834, 900)
     screenshot = ImageGrab.grab(bbox=region)
 
     img = np.array(screenshot)
@@ -136,22 +136,22 @@ def check_for_end_battle():
 
     return detected_text
     
-def auto_attack(key):
+def auto_attack():
     while True:
         start_time = time.time()
-        print(f"Hotkey {key} pressed. Function 'auto_attack' called.")
-        start_find(key)
+        print(f"Function 'auto_attack' called.")
+        start_find()
 
         while check_for_end_battle() != "End Battle":   # Wait until Cloud search is over
             time.sleep(1.5)
         time.sleep(1)               # Additional delay to ensure everything is loaded
-        attack(key)
+        attack()
         time.sleep(10)              # Delay for % analysation to start
         count = 0
         cache = 1000
         defeated = False
         while True:   
-            percentage = analyse(key)
+            percentage = analyse()
             if cache == percentage:
                 count += 1
             cache = percentage
@@ -163,14 +163,13 @@ def auto_attack(key):
             time.sleep(3)
 
         duration = time.time() - start_time
-        surrender(key, duration + 5, defeated)
+        surrender(duration + 5, defeated)
         print("Auto attack cycle COMPLETED.")
         time.sleep(5)               # Delay before starting the next cycle
 
 
 
-def check_loot(key):
-    print(f"Hotkey {key} pressed. Function 'test' called.")
+def check_loot():
     region = (799, 442, 1018, 627)
     screenshot = ImageGrab.grab(bbox=region)
 
@@ -191,8 +190,8 @@ def check_loot(key):
 
     return gold, elixir, dark
     
-def check_loot_bonus(key):
-    print(f"Hotkey {key} pressed. Function 'test' called.")
+def check_loot_bonus():
+    print(f"Function 'test' called.")
     region = (1254, 523, 1405, 671)
     screenshot = ImageGrab.grab(bbox=region)
 
@@ -212,11 +211,11 @@ def check_loot_bonus(key):
         print(f"No text detected or an error occurred")
     return gold, elixir, dark
 
-def get_all_loot(key, defeated):
-    gold_main, elixir_main, dark_main = check_loot(key)
+def get_all_loot(defeated):
+    gold_main, elixir_main, dark_main = check_loot()
     time.sleep(2)
     if defeated == False:
-        gold_bonus, elixir_bonus, dark_bonus = check_loot_bonus(key)
+        gold_bonus, elixir_bonus, dark_bonus = check_loot_bonus()
         total_gold = gold_main + gold_bonus
         total_elixir = elixir_main + elixir_bonus
         total_dark = dark_main + dark_bonus

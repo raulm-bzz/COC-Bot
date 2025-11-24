@@ -5,7 +5,6 @@ import sys
 import os
 from actions import *
 from concurrent.futures import ThreadPoolExecutor
-import threading
 controller = Controller()
 
 executor = ThreadPoolExecutor(max_workers=2)
@@ -36,14 +35,15 @@ def on_press(key):
 
         # handle special kill key first
         if hasattr(key, "char") and key.char == KEY_KILL:
-            kill_programm(key, executor)
+            kill_programm(executor)
             return False
 
         # process normal mapped hotkeys
         if hasattr(key, "char"):
             func = mapping.get(key.char)
+            print(f"Pressed key: {key.char}")
             if func:
-                executor.submit(func, key)  # run ONCE via executor
+                executor.submit(func)  # run ONCE via executor
 
     except AttributeError:
         pass
