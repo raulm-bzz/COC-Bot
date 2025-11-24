@@ -23,7 +23,6 @@ globals().update({
 
 def on_press(key):
     try:
-        # hotkey → function mapping
         mapping = {
             KEY_START_FIND: start_find,
             KEY_ATTACK: attack,
@@ -33,7 +32,6 @@ def on_press(key):
             KEY_AUTO_ATTACK: auto_attack
         }
 
-        # handle special kill key first
         if hasattr(key, "char") and key.char == KEY_KILL:
             kill_programm(executor)
             return False

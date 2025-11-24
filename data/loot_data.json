@@ -2453,5 +2453,18 @@
         "total_gold": 647020,
         "total_elixir": 619535,
         "total_dark": 6291
+    },
+    {
+        "timestamp": "2025-11-24T11:47:07",
+        "duration": 37.33319282531738,
+        "gold_main": 28829,
+        "elixir_main": 186360,
+        "dark_main": 724,
+        "gold_bonus": 282200,
+        "elixir_bonus": 282200,
+        "dark_bonus": 2075,
+        "total_gold": 311029,
+        "total_elixir": 468560,
+        "total_dark": 2799
     }
 ]

@@ -191,7 +191,6 @@ def check_loot():
     return gold, elixir, dark
     
 def check_loot_bonus():
-    print(f"Function 'test' called.")
     region = (1254, 523, 1405, 671)
     screenshot = ImageGrab.grab(bbox=region)
 
@@ -238,3 +237,19 @@ def get_all_loot(defeated):
         "total_elixir": total_elixir,
         "total_dark": total_dark
     }
+def read_area(region):
+
+    try:
+        screenshot = ImageGrab.grab(bbox=region)
+
+        img = np.array(screenshot)
+
+        raw = reader.readtext(img)
+        result = [item[1] for item in raw]  # Format like: ['28 829', '186 360', '724']
+        print(result)
+        return result
+
+    except Exception as e:
+        print(f"ERROR reading area of: {region}")
+        return []
+        
