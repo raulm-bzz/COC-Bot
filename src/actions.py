@@ -1,23 +1,32 @@
+# --- Standard Library ---
+import os
+import sys
+import time
+import json
+from datetime import datetime
+
+# --- Third-party Libraries ---
 from pynput import keyboard
 from pynput.keyboard import Controller
 import pyautogui
-import time
-import sys
-import os
-import json
-from datetime import datetime
+import numpy as np
 from PIL import ImageGrab
 import easyocr
-import numpy as np
 
-config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "config"))
+# --- Project Imports ---
+config_path = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "config")
+)
 sys.path.append(config_path)
 
 from coordinates import *
 from hotkeys import *
 
+# --- Initialization ---
 controller = Controller()
 reader = easyocr.Reader(['en'])
+
+
 
 def start_find():
     print(f"Function 'start_find' called.")
@@ -38,14 +47,8 @@ def attack():
         time.sleep(0.04)
     for x, y in CORDS_HEROS:
         pyautogui.click(x, y)
-        time.sleep(0.25)
-    for x, y in CORDS_HEROS:
-        pyautogui.click(x, y)
         time.sleep(0.2)
-
     time.sleep(1)
-
-    
 
 def surrender(duration=0.0, defeated=True):
     print(f"Function 'surrender' called.")
@@ -58,12 +61,10 @@ def surrender(duration=0.0, defeated=True):
                 save_loot_data(results, duration)
                 time.sleep(1)
 
-
-# Record cursor position
 def record_position():
     pos = pyautogui.position()
     print(f"Recorded position: {pos}")
-          
+
 def kill_programm(executor):
     print("Exiting program.")
     executor.shutdown(wait=False)
@@ -73,17 +74,13 @@ def save_loot_data(loot_data, duration, filepath="data/loot_data.json"):
     if not os.path.exists(filepath):
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump([], f, indent=4)
-
-    # Load existing data
     with open(filepath, "r", encoding="utf-8") as f:
         try:
             data = json.load(f)
             if not isinstance(data, list):
-                data = []  # Safety fallback
+                data = []
         except json.JSONDecodeError:
-            data = []  # If file is corrupt, reset it
-
-    # Add timestamp automatically
+            data = []
     loot_entry = {
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "duration": duration,
@@ -95,24 +92,8 @@ def save_loot_data(loot_data, duration, filepath="data/loot_data.json"):
         json.dump(data, f, indent=4)
     print("Loot data saved.")
 
-def analyse():
-    print(f"Function 'analyse' called.")
-    start_time = time.time()
-    region = (1780, 866, 1834, 900)
-    screenshot = ImageGrab.grab(bbox=region)
-
-    img = np.array(screenshot)
-
-    result = reader.readtext(img)
-
-    detected_text = result[0][1]
-
-    elapsed = time.time() - start_time
-    print(f"{detected_text} in {elapsed:.4f}s")
-    return int(detected_text)
-
 def check_end_battle():
-        out = read_area((147, 861, 287, 888))
+        out = read_area(CORDS_END_BATTLE)
         if out == []:
             return False
         elif out[0] == "End Battle":
@@ -120,7 +101,6 @@ def check_end_battle():
         else:
             return False
 
-    
 def auto_attack():
     while True:
         start_time = time.time()
@@ -129,14 +109,15 @@ def auto_attack():
         time.sleep(1)
         while not check_end_battle():
             time.sleep(1.5)
-        time.sleep(1)       
+        time.sleep(1)
         attack()
-        time.sleep(7)
+        time.sleep(5)
         count = 0
         cache = 1000
         defeated = False
         while True:   
-            percentage = analyse()
+            percentage = read_area(CORDS_PERCENTAGE)
+            percentage = safe_int(percentage[0])
             if cache == percentage:
                 count += 1
             cache = percentage
@@ -152,11 +133,8 @@ def auto_attack():
         print("Auto attack cycle COMPLETED.")
         time.sleep(4)               # Delay before starting the next cycle
 
-
-
 def check_loot():
-    region = (799, 442, 1018, 627)
-    raw = read_area(region)
+    raw = read_area(CORDS_MAIN_LOOT)
     if raw == []:
         return 0, 0, 0
     
@@ -169,11 +147,10 @@ def check_loot():
     dark   = safe_int(dark_raw)
 
     return gold, elixir, dark
-    
+
 def check_loot_bonus():
-    region = (1254, 523, 1405, 671)
 
-    raw = read_area(region)
+    raw = read_area(CORDS_BONUS_LOOT)
     if raw == []:
         return 0, 0, 0
 
@@ -186,7 +163,6 @@ def check_loot_bonus():
     dark   = safe_int(dark_raw)
 
     return gold, elixir, dark
-
 
 def get_all_loot(defeated):
     gold_main, elixir_main, dark_main = check_loot()
@@ -218,24 +194,20 @@ def get_all_loot(defeated):
 
 def read_area(region):
     try:
-
         screenshot = ImageGrab.grab(bbox=region)
-
         img = np.array(screenshot)
-
         raw = reader.readtext(img)
+
         result = [item[1] for item in raw]  # Format like: ['28 829', '186 360', '724']
         print(f"Read area {region}: {result}")
         return result
-
+    
     except Exception as e:
         print(f"ERROR reading area of: {region}")
         return []
-        
 
 def safe_int(value):            # helper
     try:
-        # remove garbage characters
         clean = value.replace('+', '').replace(' ', '')
         return int(clean)
     except:

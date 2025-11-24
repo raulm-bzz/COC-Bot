@@ -28,7 +28,6 @@ def on_press(key):
             KEY_ATTACK: attack,
             KEY_SURRENDER: surrender,
             KEY_RECORD: record_position,
-            KEY_ANALYSE: analyse,
             KEY_AUTO_ATTACK: auto_attack
         }
 

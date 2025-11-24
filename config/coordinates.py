@@ -64,7 +64,11 @@ CORDS_HEROS = [
     (932, 969),
     (639, 790),
     (1005, 969),
-    (639, 790)
+    (639, 790),
+    (803, 969),
+    (870, 969),
+    (932, 969),
+    (1005, 969),
     ]
 
 CORDS_EARTHQUAKES = [
@@ -77,3 +81,11 @@ CORDS_EARTHQUAKES = [
     (1234, 311),
     (1234, 311)
 ]
+
+CORDS_PERCENTAGE = (1780, 866, 1834, 900)   # x1, y1, x2, y2 coordinate to check percentage
+
+CORDS_END_BATTLE = (147, 861, 287, 888)     # x1, y1, x2, y2 coordinate to check for "End Battle" text
+
+CORDS_MAIN_LOOT = (799, 442, 1018, 627)   # x1, y1, x2, y2 coordinate to check for main loot amounts
+
+CORDS_BONUS_LOOT = (1254, 523, 1405, 671)  # x1, y1, x2, y2 coordinate to check for bonus loot amounts
