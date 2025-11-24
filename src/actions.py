@@ -32,26 +32,20 @@ def attack():
     for x, y in CORDS_EARTHQUAKES:
         pyautogui.click(x, y)
         time.sleep(0.1)
-    pyautogui.click(640, 975)
     time.sleep(0.5)
     for x, y in CORDS_VALKS:
         pyautogui.click(x, y)
         time.sleep(0.04)
-    pyautogui.click(793, 972)
-    time.sleep(1)
-    pyautogui.click(639, 790)
-    pyautogui.click(872, 974)
-    pyautogui.click(639, 790)
-    pyautogui.click(933, 973)
-    pyautogui.click(639, 790)
-    pyautogui.click(1003, 976)
-    pyautogui.click(639, 790)
-    time.sleep(1)
-    keys_to_press = ['q', 'w', 'e', 'r']
-    for key in keys_to_press:
-        controller.press(key)    # press key via controller 
-        controller.release(key)  # release key via controller
+    for x, y in CORDS_HEROS:
+        pyautogui.click(x, y)
+        time.sleep(0.25)
+    for x, y in CORDS_HEROS:
+        pyautogui.click(x, y)
         time.sleep(0.2)
+
+    time.sleep(1)
+
+    
 
 def surrender(duration=0.0, defeated=True):
     print(f"Function 'surrender' called.")
@@ -165,13 +159,11 @@ def check_loot():
     raw = read_area(region)
     if raw == []:
         return 0, 0, 0
-
-    # Step 2: Extract safely
+    
     gold_raw   = raw[0] if len(raw) > 0 else 0
     elixir_raw = raw[1] if len(raw) > 1 else 0
     dark_raw   = raw[2] if len(raw) > 2 else 0
 
-    # Step 3: Convert safely
     gold   = safe_int(gold_raw)
     elixir = safe_int(elixir_raw)
     dark   = safe_int(dark_raw)
@@ -181,17 +173,14 @@ def check_loot():
 def check_loot_bonus():
     region = (1254, 523, 1405, 671)
 
-    # Step 1: Try reading text safely
     raw = read_area(region)
     if raw == []:
         return 0, 0, 0
 
-    # Step 2: Extract safely
     gold_raw   = raw[0] if len(raw) > 0 else 0
     elixir_raw = raw[1] if len(raw) > 1 else 0
     dark_raw   = raw[2] if len(raw) > 2 else 0
 
-    # Step 3: Convert safely
     gold   = safe_int(gold_raw)
     elixir = safe_int(elixir_raw)
     dark   = safe_int(dark_raw)
@@ -202,7 +191,8 @@ def check_loot_bonus():
 def get_all_loot(defeated):
     gold_main, elixir_main, dark_main = check_loot()
     time.sleep(1)
-    if defeated == False:   # bonus exists
+    if defeated == False:
+       # bonus exists
         gold_bonus, elixir_bonus, dark_bonus = check_loot_bonus()
         total_gold = gold_main + gold_bonus
         total_elixir = elixir_main + elixir_bonus
