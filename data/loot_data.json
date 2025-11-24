@@ -2466,5 +2466,31 @@
         "total_gold": 311029,
         "total_elixir": 468560,
         "total_dark": 2799
+    },
+    {
+        "timestamp": "2025-11-24T13:55:54",
+        "duration": 41.76658630371094,
+        "gold_main": 313552,
+        "elixir_main": 817969,
+        "dark_main": 12,
+        "gold_bonus": 289000,
+        "elixir_bonus": 289000,
+        "dark_bonus": 2125,
+        "total_gold": 602552,
+        "total_elixir": 1106969,
+        "total_dark": 2137
+    },
+    {
+        "timestamp": "2025-11-24T13:58:05",
+        "duration": 51.16774225234985,
+        "gold_main": 474475,
+        "elixir_main": 459385,
+        "dark_main": 2746,
+        "gold_bonus": 282200,
+        "elixir_bonus": 282200,
+        "dark_bonus": 2075,
+        "total_gold": 756675,
+        "total_elixir": 741585,
+        "total_dark": 4821
     }
 ]

@@ -59,11 +59,9 @@ def surrender(duration=0.0, defeated=True):
         pyautogui.click(x, y)
         time.sleep(0.3)
         if i == 1:  # after the second tuple (index 1)
-                print("Second click done, getting loot data...")
-                time.sleep(3)
+                time.sleep(1.5)
                 results = get_all_loot(defeated)
                 save_loot_data(results, duration)
-                print(results)
                 time.sleep(1)
 
 
@@ -119,34 +117,27 @@ def analyse():
     print(f"{detected_text} in {elapsed:.4f}s")
     return int(detected_text)
 
-def check_for_end_battle():
-    region = (147, 861, 287, 888)           # Coordinates of the "End Battle" text/button
-    screenshot = ImageGrab.grab(bbox=region)
+def check_end_battle():
+        out = read_area((147, 861, 287, 888))
+        if out == []:
+            return False
+        elif out[0] == "End Battle":
+            return True
+        else:
+            return False
 
-    img = np.array(screenshot)
-
-    result = reader.readtext(img)
-
-    try:
-        detected_text = result[0][1]
-        print(detected_text)
-    except Exception as e:
-        detected_text = None
-        print(f"No text detected or an error occurred")
-
-    return detected_text
     
 def auto_attack():
     while True:
         start_time = time.time()
         print(f"Function 'auto_attack' called.")
         start_find()
-
-        while check_for_end_battle() != "End Battle":   # Wait until Cloud search is over
+        time.sleep(1)
+        while not check_end_battle():
             time.sleep(1.5)
-        time.sleep(1)               # Additional delay to ensure everything is loaded
+        time.sleep(1)       
         attack()
-        time.sleep(10)              # Delay for % analysation to start
+        time.sleep(7)
         count = 0
         cache = 1000
         defeated = False
@@ -165,55 +156,53 @@ def auto_attack():
         duration = time.time() - start_time
         surrender(duration + 5, defeated)
         print("Auto attack cycle COMPLETED.")
-        time.sleep(5)               # Delay before starting the next cycle
+        time.sleep(4)               # Delay before starting the next cycle
 
 
 
 def check_loot():
     region = (799, 442, 1018, 627)
-    screenshot = ImageGrab.grab(bbox=region)
+    raw = read_area(region)
+    if raw == []:
+        return 0, 0, 0
 
-    img = np.array(screenshot)
+    # Step 2: Extract safely
+    gold_raw   = raw[0] if len(raw) > 0 else 0
+    elixir_raw = raw[1] if len(raw) > 1 else 0
+    dark_raw   = raw[2] if len(raw) > 2 else 0
 
-    result = reader.readtext(img)
-
-    try:
-        gold = result[0][1]
-        elixir = result[1][1]
-        dark = result[2][1]
-
-        gold = int(gold.replace(' ', ''))
-        elixir = int(elixir.replace(' ', ''))
-        dark = int(dark.replace(' ', ''))
-    except Exception as e:
-        print(f"No text detected or an error occurred")
+    # Step 3: Convert safely
+    gold   = safe_int(gold_raw)
+    elixir = safe_int(elixir_raw)
+    dark   = safe_int(dark_raw)
 
     return gold, elixir, dark
     
 def check_loot_bonus():
     region = (1254, 523, 1405, 671)
-    screenshot = ImageGrab.grab(bbox=region)
 
-    img = np.array(screenshot)
+    # Step 1: Try reading text safely
+    raw = read_area(region)
+    if raw == []:
+        return 0, 0, 0
 
-    result = reader.readtext(img)
+    # Step 2: Extract safely
+    gold_raw   = raw[0] if len(raw) > 0 else 0
+    elixir_raw = raw[1] if len(raw) > 1 else 0
+    dark_raw   = raw[2] if len(raw) > 2 else 0
 
-    try:
-        gold = result[0][1]
-        elixir = result[1][1]
-        dark = result[2][1]
+    # Step 3: Convert safely
+    gold   = safe_int(gold_raw)
+    elixir = safe_int(elixir_raw)
+    dark   = safe_int(dark_raw)
 
-        gold = int(gold.replace('+', ''))
-        elixir = int(elixir.replace('+', ''))
-        dark = int(dark.replace('+', ''))
-    except Exception as e:
-        print(f"No text detected or an error occurred")
     return gold, elixir, dark
+
 
 def get_all_loot(defeated):
     gold_main, elixir_main, dark_main = check_loot()
-    time.sleep(2)
-    if defeated == False:
+    time.sleep(1)
+    if defeated == False:   # bonus exists
         gold_bonus, elixir_bonus, dark_bonus = check_loot_bonus()
         total_gold = gold_main + gold_bonus
         total_elixir = elixir_main + elixir_bonus
@@ -225,7 +214,6 @@ def get_all_loot(defeated):
         gold_bonus = 0
         elixir_bonus = 0
         dark_bonus = 0
-    
     return {
         "gold_main": gold_main,
         "elixir_main": elixir_main,
@@ -237,19 +225,29 @@ def get_all_loot(defeated):
         "total_elixir": total_elixir,
         "total_dark": total_dark
     }
-def read_area(region):
 
+def read_area(region):
     try:
+
         screenshot = ImageGrab.grab(bbox=region)
 
         img = np.array(screenshot)
 
         raw = reader.readtext(img)
         result = [item[1] for item in raw]  # Format like: ['28 829', '186 360', '724']
-        print(result)
+        print(f"Read area {region}: {result}")
         return result
 
     except Exception as e:
         print(f"ERROR reading area of: {region}")
         return []
         
+
+def safe_int(value):            # helper
+    try:
+        # remove garbage characters
+        clean = value.replace('+', '').replace(' ', '')
+        return int(clean)
+    except:
+        return 0                # returns zero if conversion fails, so no crash occurs (only if used for saving into loot.json)
+
