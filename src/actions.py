@@ -12,7 +12,6 @@ import pyautogui
 import numpy as np
 from PIL import ImageGrab
 import easyocr
-from ptoaster import drawpoint
 
 # --- Project Imports ---
 config_path = os.path.abspath(

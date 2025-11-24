@@ -22,20 +22,6 @@ globals().update({
     for name, data in HOTKEYS.items()
 })
 
-def DrawPoint(pos, size=6, color="red"):
-    dot = Toaster(
-        width=size,
-        height=size,
-        x=pos[0],
-        y=pos[1],
-        border_radius=size // 2,
-        background_color=color,
-        click_through=True,
-        always_on_top=True
-    )
-    dot.show()
-    return dot
-
 
 def on_press(key):
     try:
@@ -50,9 +36,6 @@ def on_press(key):
         if hasattr(key, "char") and key.char == KEY_KILL:
             kill_programm(executor)
             return False
-        
-        if hasattr(key, "char") and key.char == KEY_DRAW_POINT:
-            DrawPoint((300, 200), size=4, color="red")
 
         if hasattr(key, "char"):
             func = mapping.get(key.char)
