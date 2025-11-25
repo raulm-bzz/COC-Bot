@@ -52,14 +52,20 @@ def attack():
 
 def surrender(duration=0.0, defeated=True):
     print(f"Function 'surrender' called.")
-    for i, (x, y) in enumerate(CORDS_SURRENDER):
-        pyautogui.click(x, y)
-        time.sleep(0.3)
-        if i == 1:  # after the second tuple (index 1)
-                time.sleep(1.5)
-                results = get_all_loot(defeated)
-                save_loot_data(results, duration)
-                time.sleep(1)
+    save = False
+    if save:
+        for i, (x, y) in enumerate(CORDS_SURRENDER):
+            pyautogui.click(x, y)
+            time.sleep(0.3)
+            if i == 1:  # after the second tuple (index 1)
+                    time.sleep(1.5)
+                    results = get_all_loot(defeated)
+                    save_loot_data(results, duration)
+                    time.sleep(1)
+    elif not save:
+        for x, y in CORDS_SURRENDER:
+            pyautogui.click(x, y)
+            time.sleep(0.3)
 
 def record_position():
     pos = pyautogui.position()

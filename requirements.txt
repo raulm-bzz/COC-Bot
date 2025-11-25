@@ -1,0 +1,7 @@
+pynput==1.7.7
+pyautogui==0.9.54
+numpy==1.26.4
+pillow==10.2.0
+easyocr==1.7.2
+
+# run "py -3.12 -m pip install -r requirements.txt"
