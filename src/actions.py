@@ -28,7 +28,7 @@ controller = Controller()
 reader = easyocr.Reader(['en'])
 
 
-
+#--MAIN ACTION FUNCTIONS--
 def start_find():
     print(f"Function 'start_find' called.")
     for x, y in CORDS_START_FIND:
@@ -212,6 +212,14 @@ def read_area(region):
         print(f"ERROR reading area of: {region}")
         return []
 
+
+#--CONFIGURATION FUNCTIONS--
+def configure():
+    print("Configuration function called.")
+    pass
+
+
+# --HELPER FUNCTIONS--
 def safe_int(value):                                # helper
     try:
         clean = value.replace('+', '').replace(' ', '')
