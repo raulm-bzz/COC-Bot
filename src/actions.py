@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import json
+import random
 from datetime import datetime
 
 # --- Third-party Libraries ---
@@ -212,10 +213,14 @@ def read_area(region):
         print(f"ERROR reading area of: {region}")
         return []
 
-def safe_int(value):            # helper
+def safe_int(value):                                # helper
     try:
         clean = value.replace('+', '').replace(' ', '')
         return int(clean)
     except:
         return 0                # returns zero if conversion fails, so no crash occurs (only if used for saving into loot.json)
 
+def click_randomized(x, y, offset=5):               # helper
+    rand_x = x + random.randint(-offset, offset)
+    rand_y = y + random.randint(-offset, offset)
+    pyautogui.click(rand_x, rand_y)
