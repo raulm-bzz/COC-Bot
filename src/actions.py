@@ -32,22 +32,21 @@ reader = easyocr.Reader(['en'])
 def start_find():
     print(f"Function 'start_find' called.")
     for x, y in CORDS_START_FIND:
-        pyautogui.click(x, y)
+        click_randomized(x, y)
         time.sleep(0.3)
 
 def attack():
     print(f"Function 'attack' called.")
-    pyautogui.click(1079, 981)
     time.sleep(0.5)
     for x, y in CORDS_EARTHQUAKES:
-        pyautogui.click(x, y)
+        click_randomized(x, y)
         time.sleep(0.1)
     time.sleep(0.5)
     for x, y in CORDS_VALKS:
-        pyautogui.click(x, y)
+        click_randomized(x, y)
         time.sleep(0.04)
     for x, y in CORDS_HEROS:
-        pyautogui.click(x, y)
+        click_randomized(x, y)
         time.sleep(0.2)
     time.sleep(1)
 
@@ -56,7 +55,7 @@ def surrender(duration=0.0, defeated=True):
     save = False
     if save:
         for i, (x, y) in enumerate(CORDS_SURRENDER):
-            pyautogui.click(x, y)
+            click_randomized(x, y)
             time.sleep(0.3)
             if i == 1:  # after the second tuple (index 1)
                     time.sleep(1.5)
@@ -65,7 +64,7 @@ def surrender(duration=0.0, defeated=True):
                     time.sleep(1)
     elif not save:
         for x, y in CORDS_SURRENDER:
-            pyautogui.click(x, y)
+            click_randomized(x, y)
             time.sleep(0.3)
 
 def record_position():
