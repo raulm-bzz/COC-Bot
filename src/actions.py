@@ -111,9 +111,26 @@ def check_end_battle():
             return False
 
 def auto_attack():
+    cycles = 0
     while True:
         start_time = time.time()
         print(f"Function 'auto_attack' called.")
+        if cycles >= 999:
+            pyautogui.moveTo(1540, 100)
+            time.sleep(1)
+            pyautogui.scroll(-600)
+
+            time.sleep(0.2)
+
+            # Hold left mouse and drag to top-right
+            pyautogui.mouseDown()
+            pyautogui.moveRel(-200, 200, duration=0.5)
+            pyautogui.mouseUp()
+
+            test()
+            print("finished upgrades")
+            cycles = 0
+
         start_find()
         time.sleep(1)
         while not check_end_battle():
@@ -140,6 +157,7 @@ def auto_attack():
         duration = time.time() - start_time
         surrender(duration + 5, defeated)
         print("Auto attack cycle COMPLETED.")
+        cycles += 1
         time.sleep(4)               # Delay before starting the next cycle
 
 def check_loot():
@@ -218,7 +236,7 @@ def read_area(region):
 
 def calculate_grid(top, left, right): 
     rows = 13
-    cols = 25
+    cols = 4
     
     # Horizontal and vertical steps
     x_step = (right[0] - top[0]) / (cols - 1)
@@ -259,9 +277,9 @@ def get_storage():
     elixir_raw = raw[1] if len(raw) > 1 else 0
     dark_raw   = raw[2] if len(raw) > 2 else 0
 
-    gold   = safe_int(gold_raw)
-    elixir = safe_int(elixir_raw)
-    dark   = safe_int(dark_raw)
+    gold   = extract_number(gold_raw)
+    elixir = extract_number(elixir_raw)
+    dark   = extract_number(dark_raw)
 
     return gold, elixir, dark
 
@@ -278,16 +296,28 @@ def test():
     else:
         walls_to_upgrade_gold += gold // 4000000
         walls_to_upgrade_elixir += elixir // 4000000
-        upgrade_walls()
+        for cord in grid_coords:
+            pyautogui.click(cord)
+            time.sleep(0.3)
+            out = read_area(CORDS_UPGRADE_WALL)
+            time.sleep(0.05)
+            level = extract_number(out)
+            print(f"Wall is level: {level}")
+            if level == 16:  # if this level, upgrade
+                if walls_to_upgrade_gold > 0:
+                    for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD:
+                        time.sleep(0.1)
+                        pyautogui.click(x, y)
+                        time.sleep(0.1)
+                    walls_to_upgrade_gold -= 1
 
-def upgrade_walls():
-    for cord in grid_coords:
-        pyautogui.click(cord)
-        time.sleep(0.3)
-        out = read_area(CORDS_UPGRADE_WALL)
-        time.sleep(0.4)
-        level = extract_number(out)
-        print(f"Wall is level: {level}")
+                elif walls_to_upgrade_elixir > 0:
+                    for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR:
+                        time.sleep(0.1)
+                        pyautogui.click(x, y)
+                        time.sleep(0.1)
+                    walls_to_upgrade_elixir -= 1
+
         
 
 

@@ -85,7 +85,15 @@ CORDS_EARTHQUAKES = [
 
 CORDS_UPGRADE_WALL = (845, 720, 1141, 767)  # x1, y1, x2, y2 coordinate to check for "Upgrade Wall" text
 
-CORDS_STORAGE = (1596, 44, 1804, 257)  #
+CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD = [(1068, 834),
+                                         (1350, 900)
+                                         ]
+CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR = [(1220, 834),
+                                           (1350, 900)
+                                           ]
+
+
+CORDS_STORAGE = (1641, 59, 1804, 247)  #
 
 CORDS_PERCENTAGE = (1780, 866, 1834, 900)   # x1, y1, x2, y2 coordinate to check percentage
 
