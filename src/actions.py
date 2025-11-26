@@ -215,90 +215,41 @@ def read_area(region):
         return []
 
 
-def test(top, left, bottom, right):
-    # example cords, best if given based on session zoom
-    # top = (885, 156)
-    # left = (695, 303)
-    # bottom = (1073, 592)
-    # right = (1267, 446)
-
-    x1 = top[0]
-    x2 = left[0]
-    y1 = top[1]
-    y2 = left[1]
-
-    x_step = (x1 - x2)    #gonna give +
-    y_step = (y2 - y1)    #gonna give +
-
-    x_step = x_step / 12
-    y_step = y_step / 12
-
-    last_x = x1
-    last_y = y1
-
-    cords_row_tl = [(x1, y1)]
-
-    for _ in range(12):
-        new_cord = (last_x - x_step, last_y + y_step)
-        new_cord_int = (int(math.ceil(new_cord[0])), int(math.ceil(new_cord[1])))
-        cords_row_tl.append(new_cord_int)
-        last_x = new_cord[0]
-        last_y = new_cord[1]
-
-
-
-    x1 = top[0]
-    x2 = right[0]
-    y1 = top[1]
-    y2 = right[1]
-
-    x_step = (x2 - x1)    #gonna give +
-    y_step = (y2 - y1)    #gonna give +
-
-    x_step = x_step / 24
-    y_step = y_step / 24
-
-    last_x = x1
-    last_y = y1
-
-    cords_row_tr = [(x1, y1)]
-
-    for _ in range(24):
-        new_cord = (last_x + x_step, last_y + y_step)
-        new_cord_int = (int(math.ceil(new_cord[0])), int(math.ceil(new_cord[1])))
-        cords_row_tr.append(new_cord_int)
-        last_x = new_cord[0]
-        last_y = new_cord[1]
+def calculate_grid(top, left, right): 
+    rows = 13
+    cols = 25
+    
+    # Horizontal and vertical steps
+    x_step = (right[0] - top[0]) / (cols - 1)
+    y_step = (right[1] - top[1]) / (cols - 1)
+    
+    x_step_row = (left[0] - top[0]) / (rows - 1)
+    y_step_row = (left[1] - top[1]) / (rows - 1)
+    
+    grid_coords = []
+    
+    for row in range(rows):
+        for col in range(cols):
+            x = top[0] + x_step_row * row + x_step * col
+            y = top[1] + y_step_row * row + y_step * col
+            grid_coords.append((int(round(x)), int(round(y))))
+    
+    for coord in grid_coords:
+        print(coord)
+        pyautogui.click(coord[0], coord[1])
+        time.sleep(0.1)
 
 
 
 
 
-
-    for i, cord in enumerate(cords_row_tl):
-        print(f"Sequence: {i + 1} Clicking at: {cord}")
-        pyautogui.click(cord[0], cord[1])
-        time.sleep(0.2)
-
-    for i, cord in enumerate(cords_row_tr):
-        print(f"Sequence: {i + 1} Clicking at: {cord}")
-        pyautogui.click(cord[0], cord[1])
-        time.sleep(0.2)
-
-
-
-
-
-def append_cord():
+def number_1():
     pos = pyautogui.position()
     print(pos)
     walls_cords.append((pos.x, pos.y))
 
-def configure_test2():
-    print("Configured wall coordinates:")
-    for cord in walls_cords:
-        print(cord)
-    test(walls_cords[0], walls_cords[1], walls_cords[2], walls_cords[3]) #should be ordered top, left, bottom, right
+def number_2():
+    calculate_grid(walls_cords[0], walls_cords[1], walls_cords[2]) #should be ordered top, left, right
 
 
 #--CONFIGURATION FUNCTIONS--
