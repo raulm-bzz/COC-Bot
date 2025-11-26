@@ -252,6 +252,25 @@ def number_2():
     calculate_grid(walls_cords[0], walls_cords[1], walls_cords[2]) #should be ordered top, left, right
 
 
+def get_storage():
+    raw = read_area(CORDS_STORAGE)
+    if raw == []:
+        return 0, 0, 0
+
+    gold_raw   = raw[0] if len(raw) > 0 else 0
+    elixir_raw = raw[1] if len(raw) > 1 else 0
+    dark_raw   = raw[2] if len(raw) > 2 else 0
+
+    gold   = safe_int(gold_raw)
+    elixir = safe_int(elixir_raw)
+    dark   = safe_int(dark_raw)
+
+    return gold, elixir, dark
+
+def test():
+    # upgrade walls
+
+
 #--CONFIGURATION FUNCTIONS--
 
 

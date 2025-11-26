@@ -83,6 +83,7 @@ CORDS_EARTHQUAKES = [
     (1234, 311)
 ]
 
+CORDS_STORAGE = (1596, 44, 1804, 257)  #
 
 CORDS_PERCENTAGE = (1780, 866, 1834, 900)   # x1, y1, x2, y2 coordinate to check percentage
 
