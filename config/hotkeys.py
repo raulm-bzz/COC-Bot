@@ -6,5 +6,6 @@ HOTKEYS = {
     "RECORD":      { "key": "0", "description": "Record Click" },
     "KILL":        { "key": "$", "description": "Kill Script" },
     "AUTO_ATTACK":      { "key": "z", "description": "Auto Attack Cycle" },
+    "TEST":      { "key": "t", "description": "test" },
     "CONFIGURE":      { "key": "c", "description": "Configure" }
 }

@@ -24,6 +24,7 @@ globals().update({
     for name, data in HOTKEYS.items()
 })
 
+wall_cords = []
 
 def on_press(key):
     global CONFIG_MODE
@@ -45,13 +46,15 @@ def on_press(key):
         # (example actions)
         # ----------------------------
         config_mapping = {
-            "1": lambda: configure()
+            "1": lambda: append_cord(),
+            "2": lambda: configure_test2()
         }
 
         # --- KILL ALWAYS WORKS ---
         if hasattr(key, "char") and key.char == KEY_KILL:
             kill_programm(executor)
             return False
+        
 
         # ==========================================================
         # ENTER CONFIG MODE (press `c`)
@@ -94,6 +97,9 @@ def on_press(key):
             print(f"[NORMAL] Pressed key: {key.char}")
             if func:
                 executor.submit(func)
+        if hasattr(key, "char") and key.char == KEY_TEST:
+            print(f"Test key {key} pressed!")
+            test()
 
     except AttributeError:
         pass

@@ -83,6 +83,23 @@ CORDS_EARTHQUAKES = [
     (1234, 311)
 ]
 
+CORDS_TILES = [
+    (933, 152),
+    (918, 164),
+    (903, 176),
+    (888, 187),
+    (873, 199),
+    (858, 211),
+    (843, 222),
+    (828, 234),
+    (813, 246),
+    (798, 257),
+    (783, 269),
+    (768, 281),
+    (753, 292)
+
+]
+
 CORDS_PERCENTAGE = (1780, 866, 1834, 900)   # x1, y1, x2, y2 coordinate to check percentage
 
 CORDS_END_BATTLE = (147, 861, 287, 888)     # x1, y1, x2, y2 coordinate to check for "End Battle" text

@@ -5,6 +5,7 @@ import time
 import json
 import random
 from datetime import datetime
+import math
 
 # --- Third-party Libraries ---
 from pynput import keyboard
@@ -13,7 +14,7 @@ import pyautogui
 import numpy as np
 from PIL import ImageGrab
 import easyocr
-
+import ast
 # --- Project Imports ---
 config_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "config")
@@ -26,6 +27,7 @@ from hotkeys import *
 # --- Initialization ---
 controller = Controller()
 reader = easyocr.Reader(['en'])
+walls_cords = []
 
 
 #--MAIN ACTION FUNCTIONS--
@@ -213,10 +215,54 @@ def read_area(region):
         return []
 
 
+def test(top, bottom):
+    # example cords, best if given based on session zoom
+    # top = (885, 156)
+    left = (695, 303)
+    # bottom = (1073, 592)
+    right = (1267, 446)
+
+    x1 = top[0]
+    x2 = bottom[0]
+    y1 = top[1]
+    y2 = bottom[1]
+
+    x_step = (x1 - x2)    #gonna give +
+    y_step = (y2 - y1)    #gonna give +
+
+    x_step = x_step / 12
+    y_step = y_step / 12
+
+    last_x = x1
+    last_y = y1
+
+    cords_row_1 = [(x1, y1)]
+
+    for _ in range(12):
+        new_cord = (last_x - x_step, last_y + y_step)
+        new_cord_int = (int(math.ceil(new_cord[0])), int(math.ceil(new_cord[1])))
+        cords_row_1.append(new_cord_int)
+        last_x = new_cord[0]
+        last_y = new_cord[1]
+
+    for i, cord in enumerate(cords_row_1):
+        print(f"Sequence: {i} Clicking at: {cord}")
+        pyautogui.click(cord[0], cord[1])
+        time.sleep(0.2)
+
+def append_cord():
+    pos = pyautogui.position()
+    print(pos)
+    walls_cords.append((pos.x, pos.y))
+
+def configure_test2():
+    print("Configured wall coordinates:")
+    for cord in walls_cords:
+        print(cord)
+    test(walls_cords[0], walls_cords[1])
+
+
 #--CONFIGURATION FUNCTIONS--
-def configure():
-    print("Configuration function called.")
-    pass
 
 
 # --HELPER FUNCTIONS--
