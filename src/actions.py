@@ -215,17 +215,17 @@ def read_area(region):
         return []
 
 
-def test(top, bottom):
+def test(top, left, bottom, right):
     # example cords, best if given based on session zoom
     # top = (885, 156)
-    left = (695, 303)
+    # left = (695, 303)
     # bottom = (1073, 592)
-    right = (1267, 446)
+    # right = (1267, 446)
 
     x1 = top[0]
-    x2 = bottom[0]
+    x2 = left[0]
     y1 = top[1]
-    y2 = bottom[1]
+    y2 = left[1]
 
     x_step = (x1 - x2)    #gonna give +
     y_step = (y2 - y1)    #gonna give +
@@ -236,19 +236,58 @@ def test(top, bottom):
     last_x = x1
     last_y = y1
 
-    cords_row_1 = [(x1, y1)]
+    cords_row_tl = [(x1, y1)]
 
     for _ in range(12):
         new_cord = (last_x - x_step, last_y + y_step)
         new_cord_int = (int(math.ceil(new_cord[0])), int(math.ceil(new_cord[1])))
-        cords_row_1.append(new_cord_int)
+        cords_row_tl.append(new_cord_int)
         last_x = new_cord[0]
         last_y = new_cord[1]
 
-    for i, cord in enumerate(cords_row_1):
-        print(f"Sequence: {i} Clicking at: {cord}")
+
+
+    x1 = top[0]
+    x2 = right[0]
+    y1 = top[1]
+    y2 = right[1]
+
+    x_step = (x2 - x1)    #gonna give +
+    y_step = (y2 - y1)    #gonna give +
+
+    x_step = x_step / 24
+    y_step = y_step / 24
+
+    last_x = x1
+    last_y = y1
+
+    cords_row_tr = [(x1, y1)]
+
+    for _ in range(24):
+        new_cord = (last_x + x_step, last_y + y_step)
+        new_cord_int = (int(math.ceil(new_cord[0])), int(math.ceil(new_cord[1])))
+        cords_row_tr.append(new_cord_int)
+        last_x = new_cord[0]
+        last_y = new_cord[1]
+
+
+
+
+
+
+    for i, cord in enumerate(cords_row_tl):
+        print(f"Sequence: {i + 1} Clicking at: {cord}")
         pyautogui.click(cord[0], cord[1])
         time.sleep(0.2)
+
+    for i, cord in enumerate(cords_row_tr):
+        print(f"Sequence: {i + 1} Clicking at: {cord}")
+        pyautogui.click(cord[0], cord[1])
+        time.sleep(0.2)
+
+
+
+
 
 def append_cord():
     pos = pyautogui.position()
@@ -259,7 +298,7 @@ def configure_test2():
     print("Configured wall coordinates:")
     for cord in walls_cords:
         print(cord)
-    test(walls_cords[0], walls_cords[1])
+    test(walls_cords[0], walls_cords[1], walls_cords[2], walls_cords[3]) #should be ordered top, left, bottom, right
 
 
 #--CONFIGURATION FUNCTIONS--
