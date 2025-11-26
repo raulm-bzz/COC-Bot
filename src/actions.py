@@ -14,7 +14,7 @@ import pyautogui
 import numpy as np
 from PIL import ImageGrab
 import easyocr
-import ast
+import re
 # --- Project Imports ---
 config_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "config")
@@ -27,7 +27,8 @@ from hotkeys import *
 # --- Initialization ---
 controller = Controller()
 reader = easyocr.Reader(['en'])
-walls_cords = []
+grid_coords = []
+corner_walls_cords = []
 
 
 #--MAIN ACTION FUNCTIONS--
@@ -226,7 +227,6 @@ def calculate_grid(top, left, right):
     x_step_row = (left[0] - top[0]) / (rows - 1)
     y_step_row = (left[1] - top[1]) / (rows - 1)
     
-    grid_coords = []
     
     for row in range(rows):
         for col in range(cols):
@@ -236,8 +236,6 @@ def calculate_grid(top, left, right):
     
     for coord in grid_coords:
         print(coord)
-        pyautogui.click(coord[0], coord[1])
-        time.sleep(0.1)
 
 
 
@@ -246,10 +244,10 @@ def calculate_grid(top, left, right):
 def number_1():
     pos = pyautogui.position()
     print(pos)
-    walls_cords.append((pos.x, pos.y))
+    corner_walls_cords.append((pos.x, pos.y))
 
 def number_2():
-    calculate_grid(walls_cords[0], walls_cords[1], walls_cords[2]) #should be ordered top, left, right
+    calculate_grid(corner_walls_cords[0], corner_walls_cords[1], corner_walls_cords[2]) #should be ordered top, left, right
 
 
 def get_storage():
@@ -269,6 +267,29 @@ def get_storage():
 
 def test():
     # upgrade walls
+    out = get_storage()
+    gold = out[0]
+    elixir = out[1]
+    walls_to_upgrade_gold = 0
+    walls_to_upgrade_elixir = 0
+
+    if gold <= 4000000 and elixir <= 4000000:
+        print("Not enough resources to upgrade walls.")
+    else:
+        walls_to_upgrade_gold += gold // 4000000
+        walls_to_upgrade_elixir += elixir // 4000000
+        upgrade_walls()
+
+def upgrade_walls():
+    for cord in grid_coords:
+        pyautogui.click(cord)
+        time.sleep(0.3)
+        out = read_area(CORDS_UPGRADE_WALL)
+        time.sleep(0.4)
+        level = extract_number(out)
+        print(f"Wall is level: {level}")
+        
+
 
 
 #--CONFIGURATION FUNCTIONS--
@@ -286,3 +307,11 @@ def click_randomized(x, y, offset=5):               # helper
     rand_x = x + random.randint(-offset, offset)
     rand_y = y + random.randint(-offset, offset)
     pyautogui.click(rand_x, rand_y)
+
+import re
+
+def extract_number(s):
+    if not s:
+        return 0
+    digits = re.sub(r'[^0-9]', '', str(s))
+    return int(digits) if digits else 0
