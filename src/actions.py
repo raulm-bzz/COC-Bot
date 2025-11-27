@@ -323,6 +323,62 @@ def test():
 
 
 #--CONFIGURATION FUNCTIONS--
+def zoomtest():
+    pyautogui.moveTo(1000, 550)
+    time.sleep(1)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+    pyautogui.scroll(100)
+
+
+    time.sleep(2)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    pyautogui.scroll(-100)
+    #pyautogui.scroll(-100)
+    #pyautogui.scroll(-100)
+    #pyautogui.scroll(-100)
+    time.sleep(1.5)
+
+    pyautogui.moveTo(1540, 90)
+    pyautogui.mouseDown()
+    pyautogui.moveRel(-500, 500, duration=0.3)
+    pyautogui.mouseUp()
 
 
 # --HELPER FUNCTIONS--
@@ -345,3 +401,10 @@ def extract_number(s):
         return 0
     digits = re.sub(r'[^0-9]', '', str(s))
     return int(digits) if digits else 0
+
+
+# 949, 147
+# 909, 153
+# 944, 149
+# 915, 152
+# 905, 153
