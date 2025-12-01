@@ -117,10 +117,8 @@ def auto_attack():
         print(f"Function 'auto_attack' called.")
         if cycles >= 999:
             pyautogui.moveTo(1540, 100)
-            time.sleep(1)
-            pyautogui.scroll(-600)
 
-            time.sleep(0.2)
+            time.sleep(0.3)
 
             # Hold left mouse and drag to top-right
             pyautogui.mouseDown()
@@ -236,7 +234,7 @@ def read_area(region):
 
 def calculate_grid(top, left, right): 
     rows = 13
-    cols = 4
+    cols = 25
     
     # Horizontal and vertical steps
     x_step = (right[0] - top[0]) / (cols - 1)
@@ -285,30 +283,38 @@ def get_storage():
 
 def test():
     # upgrade walls
+    pyautogui.moveTo(1540, 90)
+    pyautogui.mouseDown()
+    pyautogui.moveRel(-500, 500, duration=0.3)
+    pyautogui.mouseUp()
+    time.sleep(1)
+
     out = get_storage()
     gold = out[0]
     elixir = out[1]
     walls_to_upgrade_gold = 0
     walls_to_upgrade_elixir = 0
+    wall_level = 17               # wall level to upgrade
+    wall_cost = 5600000                # wall cost of the desired level to upgrade
 
-    if gold <= 4000000 and elixir <= 4000000:
+    if gold <= wall_cost and elixir <= wall_cost:
         print("Not enough resources to upgrade walls.")
-    else:
-        walls_to_upgrade_gold += gold // 4000000
-        walls_to_upgrade_elixir += elixir // 4000000
+    elif gold >= wall_cost or elixir >= wall_cost:
+        walls_to_upgrade_gold += gold // wall_cost
+        walls_to_upgrade_elixir += elixir // wall_cost
         for cord in grid_coords:
             pyautogui.click(cord)
-            time.sleep(0.3)
-            out = read_area(CORDS_UPGRADE_WALL)
-            time.sleep(0.05)
-            level = extract_number(out)
+            time.sleep(0.4)
+            out = read_area((1012, 281, 1112, 803))
+            time.sleep(0.2)
+            upnum = extract_number(out)
             print(f"Wall is level: {level}")
-            if level == 16:  # if this level, upgrade
+            if upnum == wall_cost:  # if this level, upgrade
                 if walls_to_upgrade_gold > 0:
                     for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD:
-                        time.sleep(0.1)
+                        time.sleep(0.2)
                         pyautogui.click(x, y)
-                        time.sleep(0.1)
+                        time.sleep(0.2)
                     walls_to_upgrade_gold -= 1
 
                 elif walls_to_upgrade_elixir > 0:
@@ -317,70 +323,20 @@ def test():
                         pyautogui.click(x, y)
                         time.sleep(0.1)
                     walls_to_upgrade_elixir -= 1
+            if walls_to_upgrade_elixir == 0 and walls_to_upgrade_gold == 0:
+                print("No more walls to upgrade")
+                return None
 
         
 
-
+743, 148, 1283, 668
 
 #--CONFIGURATION FUNCTIONS--
+def suggestion():
+    read_area((743, 148, 1283, 668))
+
 def zoomtest():
-    pyautogui.moveTo(1000, 550)
-    time.sleep(1)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-    pyautogui.scroll(100)
-
-
-    time.sleep(2)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    pyautogui.scroll(-100)
-    #pyautogui.scroll(-100)
-    #pyautogui.scroll(-100)
-    #pyautogui.scroll(-100)
-    time.sleep(1.5)
-
-    pyautogui.moveTo(1540, 90)
-    pyautogui.mouseDown()
-    pyautogui.moveRel(-500, 500, duration=0.3)
-    pyautogui.mouseUp()
-
-
+    pass
 # --HELPER FUNCTIONS--
 def safe_int(value):                                # helper
     try:
@@ -403,8 +359,4 @@ def extract_number(s):
     return int(digits) if digits else 0
 
 
-# 949, 147
-# 909, 153
-# 944, 149
-# 915, 152
-# 905, 153
+# 1090, 532 middle

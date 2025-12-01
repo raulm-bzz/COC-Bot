@@ -49,7 +49,7 @@ def on_press(key):
             "1": lambda: number_1(),
             "2": lambda: number_2(),
             "3": lambda: test(),
-            "4": lambda: zoomtest()
+            "4": lambda: suggestion()
         }
 
         # --- KILL ALWAYS WORKS ---
