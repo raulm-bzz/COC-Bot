@@ -39,13 +39,19 @@ def start_find():
         time.sleep(0.3)
 
 def attack():
+    first = CORDS_VALKS[0]
+
+    rest = CORDS_VALKS[1:]
+    random.shuffle(rest)
+
+    rndm_CORDS_VALKS = [first] + rest
     print(f"Function 'attack' called.")
     time.sleep(0.5)
     for x, y in CORDS_EARTHQUAKES:
         click_randomized(x, y)
         time.sleep(0.1)
     time.sleep(0.5)
-    for x, y in CORDS_VALKS:
+    for x, y in rndm_CORDS_VALKS:
         click_randomized(x, y)
         time.sleep(0.04)
     for x, y in CORDS_HEROS:
