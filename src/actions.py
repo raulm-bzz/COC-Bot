@@ -121,18 +121,11 @@ def auto_attack():
     while True:
         start_time = time.time()
         print(f"Function 'auto_attack' called.")
-        if cycles >= 999:
-            pyautogui.moveTo(1540, 100)
-
-            time.sleep(0.3)
-
-            # Hold left mouse and drag to top-right
-            pyautogui.mouseDown()
-            pyautogui.moveRel(-200, 200, duration=0.5)
-            pyautogui.mouseUp()
-
-            test()
-            print("finished upgrades")
+        if cycles >= 3:
+            storage = get_storage()
+            print(f"Storage status: Gold: {storage[0]}, Elixir: {storage[1]}")
+            if storage[0] == 26000000 and storage[1] == 26000000:
+                suggestion()
             cycles = 0
 
         start_find()
@@ -301,7 +294,7 @@ def test():
     walls_to_upgrade_gold = 0
     walls_to_upgrade_elixir = 0
     wall_level = 17               # wall level to upgrade
-    wall_cost = 5600000                # wall cost of the desired level to upgrade
+    wall_cost = 7000000                # wall cost of the desired level to upgrade
 
     if gold <= wall_cost and elixir <= wall_cost:
         print("Not enough resources to upgrade walls.")
@@ -335,11 +328,129 @@ def test():
 
         
 
-743, 148, 1283, 668
 
 #--CONFIGURATION FUNCTIONS--
 def suggestion():
-    read_area((743, 148, 1283, 668))
+    pyautogui.click(1000, 77)
+    pyautogui.moveTo(830, 636)
+    time.sleep(0.2)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    pyautogui.scroll(-500)
+    time.sleep(3)
+
+    pyautogui.click(830, 636)
+
+    out = get_storage()
+    gold = out[0]
+    elixir = out[1]
+    walls_to_upgrade_gold = 0
+    walls_to_upgrade_elixir = 0
+    wall_cost = 7000000
+
+
+    if gold <= wall_cost and elixir <= wall_cost:
+        print("Not enough resources to upgrade walls.")
+    elif gold >= wall_cost or elixir >= wall_cost:
+        walls_to_upgrade_gold += gold // wall_cost
+        walls_to_upgrade_elixir += elixir // wall_cost
+        if walls_to_upgrade_gold > 0:
+            if walls_to_upgrade_gold == 1:
+                for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD:
+                    time.sleep(0.2)
+                    pyautogui.click(x, y)
+                    time.sleep(0.2)
+                walls_to_upgrade_gold = 0
+            elif walls_to_upgrade_gold == 2:
+                pyautogui.click(920, 821)
+                time.sleep(0.2)
+                pyautogui.click(920, 821)
+                for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD:
+                    time.sleep(0.2)
+                    pyautogui.click(x, y)
+                    time.sleep(0.2)
+                walls_to_upgrade_gold = 0
+            elif walls_to_upgrade_gold == 3:
+                pyautogui.click(920, 821)
+                time.sleep(0.2)
+                pyautogui.click(920, 821)
+                time.sleep(0.2)
+                pyautogui.click(920, 821)
+                for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD:
+                    time.sleep(0.2)
+                    pyautogui.click(x, y)
+                    time.sleep(0.2)
+                walls_to_upgrade_gold = 0
+        time.sleep(1)
+        pyautogui.click(1480, 220)
+        time.sleep(1)
+        pyautogui.click(1000, 77)
+        pyautogui.moveTo(1014, 655)
+        time.sleep(0.5)
+        pyautogui.mouseDown()
+        pyautogui.moveRel(0, -510, duration=1)
+        time.sleep(0.2)
+        pyautogui.mouseUp()
+        time.sleep(1)
+
+        pyautogui.moveTo(1014, 655)
+        time.sleep(0.5)
+        pyautogui.mouseDown()
+        pyautogui.moveRel(0, -510, duration=1)
+        time.sleep(0.2)
+        pyautogui.mouseUp()
+        time.sleep(1)
+
+        pyautogui.click(831, 400)
+
+
+        if walls_to_upgrade_elixir > 0:
+            if walls_to_upgrade_elixir == 1:
+                for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR:
+                    time.sleep(0.2)
+                    pyautogui.click(x, y)
+                    time.sleep(0.2)
+                walls_to_upgrade_elixir = 0
+            elif walls_to_upgrade_elixir == 2:
+                pyautogui.click(920, 821)
+                time.sleep(0.2)
+                pyautogui.click(920, 821)
+                for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR:
+                    time.sleep(0.2)
+                    pyautogui.click(x, y)
+                    time.sleep(0.2)
+                walls_to_upgrade_elixir = 0
+            elif walls_to_upgrade_elixir == 3:
+                pyautogui.click(920, 821)
+                time.sleep(0.2)
+                pyautogui.click(920, 821)
+                time.sleep(0.2)
+                pyautogui.click(920, 821)
+                for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR:
+                    time.sleep(0.2)
+                    pyautogui.click(x, y)
+                    time.sleep(0.2)
+                walls_to_upgrade_elixir = 0
+
+    if walls_to_upgrade_elixir == 0 and walls_to_upgrade_gold == 0:
+        print("No more walls to upgrade")
+        return None
+
 
 def zoomtest():
     pass
