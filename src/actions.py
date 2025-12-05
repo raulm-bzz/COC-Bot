@@ -121,7 +121,7 @@ def auto_attack():
     while True:
         start_time = time.time()
         print(f"Function 'auto_attack' called.")
-        if cycles >= 3:
+        if cycles >= 399:
             storage = get_storage()
             print(f"Storage status: Gold: {storage[0]}, Elixir: {storage[1]}")
             if storage[0] == 26000000 and storage[1] == 26000000:
@@ -462,12 +462,11 @@ def safe_int(value):                                # helper
     except:
         return 0                # returns zero if conversion fails, so no crash occurs (only if used for saving into loot.json)
 
-def click_randomized(x, y, offset=5):               # helper
+def click_randomized(x, y, offset=5):               
     rand_x = x + random.randint(-offset, offset)
     rand_y = y + random.randint(-offset, offset)
     pyautogui.click(rand_x, rand_y)
 
-import re
 
 def extract_number(s):
     if not s:
@@ -475,5 +474,3 @@ def extract_number(s):
     digits = re.sub(r'[^0-9]', '', str(s))
     return int(digits) if digits else 0
 
-
-# 1090, 532 middle

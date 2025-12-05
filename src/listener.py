@@ -46,10 +46,6 @@ def on_press(key):
         # (example actions)
         # ----------------------------
         config_mapping = {
-            "1": lambda: number_1(),
-            "2": lambda: number_2(),
-            "3": lambda: test(),
-            "4": lambda: suggestion()
         }
 
         # --- KILL ALWAYS WORKS ---
