@@ -130,7 +130,19 @@ def auto_attack():
 
         start_find()
         time.sleep(1)
-        while not check_end_battle():
+        false_count = 0
+        while True:
+            if check_end_battle():
+                false_count = 0
+                break      # reset if True is returned
+            else:
+                false_count += 1     # count consecutive False results
+
+                if false_count == 10:
+                    print("check_end_battle() returned False 10 times in a row, trying start find again.")
+                    false_count = 0
+                    start_find()
+
             time.sleep(1.5)
         time.sleep(1)
         attack()
