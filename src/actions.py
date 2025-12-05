@@ -66,7 +66,7 @@ def surrender(duration=0.0, defeated=True):
         for i, (x, y) in enumerate(CORDS_SURRENDER):
             click_randomized(x, y)
             time.sleep(0.3)
-            if i == 1:  # after the second tuple (index 1)
+            if i == 1:
                     time.sleep(1.5)
                     results = get_all_loot(defeated)
                     save_loot_data(results, duration)
@@ -121,11 +121,11 @@ def auto_attack():
     while True:
         start_time = time.time()
         print(f"Function 'auto_attack' called.")
-        if cycles >= 399:
+        if cycles >= 3:
             storage = get_storage()
             print(f"Storage status: Gold: {storage[0]}, Elixir: {storage[1]}")
             if storage[0] == 26000000 and storage[1] == 26000000:
-                suggestion()
+                upgrade_walls()
             cycles = 0
 
         start_find()
@@ -230,7 +230,6 @@ def read_area(region):
         print(f"ERROR reading area of: {region}")
         return []
 
-
 def calculate_grid(top, left, right): 
     rows = 13
     cols = 25
@@ -251,19 +250,6 @@ def calculate_grid(top, left, right):
     
     for coord in grid_coords:
         print(coord)
-
-
-
-
-
-def number_1():
-    pos = pyautogui.position()
-    print(pos)
-    corner_walls_cords.append((pos.x, pos.y))
-
-def number_2():
-    calculate_grid(corner_walls_cords[0], corner_walls_cords[1], corner_walls_cords[2]) #should be ordered top, left, right
-
 
 def get_storage():
     raw = read_area(CORDS_STORAGE)
@@ -326,11 +312,7 @@ def test():
                 print("No more walls to upgrade")
                 return None
 
-        
-
-
-#--CONFIGURATION FUNCTIONS--
-def suggestion():
+def upgrade_walls():
     pyautogui.click(1000, 77)
     pyautogui.moveTo(830, 636)
     time.sleep(0.2)
@@ -451,22 +433,18 @@ def suggestion():
         print("No more walls to upgrade")
         return None
 
-
-def zoomtest():
-    pass
 # --HELPER FUNCTIONS--
-def safe_int(value):                                # helper
+def safe_int(value):
     try:
         clean = value.replace('+', '').replace(' ', '')
         return int(clean)
     except:
         return 0                # returns zero if conversion fails, so no crash occurs (only if used for saving into loot.json)
 
-def click_randomized(x, y, offset=5):               
+def click_randomized(x, y, offset=5):
     rand_x = x + random.randint(-offset, offset)
     rand_y = y + random.randint(-offset, offset)
     pyautogui.click(rand_x, rand_y)
-
 
 def extract_number(s):
     if not s:

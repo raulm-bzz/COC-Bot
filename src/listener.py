@@ -61,7 +61,6 @@ def on_press(key):
             CONFIG_MODE = True
             print("\n>>> ENTERED CONFIG MODE <<<")
             print("Press ESC or 'c' again to return to normal mode.\n")
-            print("\nPress '1' to record wall grid positions in following order: top, left, right")
             return
 
         # ==========================================================
@@ -78,7 +77,6 @@ def on_press(key):
                 print("\n>>> EXITED CONFIG MODE <<<\n")
                 return
 
-            # Handle config-mode hotkeys
             if hasattr(key, "char"):
                 func = config_mapping.get(key.char)
                 if func:
