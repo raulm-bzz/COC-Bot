@@ -46,6 +46,7 @@ def on_press(key):
         # (example actions)
         # ----------------------------
         config_mapping = {
+            "1": lambda: upgrade_walls()
         }
 
         # --- KILL ALWAYS WORKS ---

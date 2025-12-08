@@ -371,20 +371,20 @@ def upgrade_walls():
                     time.sleep(0.2)
                 walls_to_upgrade_gold = 0
             elif walls_to_upgrade_gold == 2:
-                pyautogui.click(920, 821)
+                pyautogui.click(1000, 821)
                 time.sleep(0.2)
-                pyautogui.click(920, 821)
+                pyautogui.click(1000, 821)
                 for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD:
                     time.sleep(0.2)
                     pyautogui.click(x, y)
                     time.sleep(0.2)
                 walls_to_upgrade_gold = 0
             elif walls_to_upgrade_gold == 3:
-                pyautogui.click(920, 821)
+                pyautogui.click(1000, 821)
                 time.sleep(0.2)
-                pyautogui.click(920, 821)
+                pyautogui.click(1000, 821)
                 time.sleep(0.2)
-                pyautogui.click(920, 821)
+                pyautogui.click(1000, 821)
                 for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD:
                     time.sleep(0.2)
                     pyautogui.click(x, y)
@@ -421,20 +421,20 @@ def upgrade_walls():
                     time.sleep(0.2)
                 walls_to_upgrade_elixir = 0
             elif walls_to_upgrade_elixir == 2:
-                pyautogui.click(920, 821)
+                pyautogui.click(1000, 821)
                 time.sleep(0.2)
-                pyautogui.click(920, 821)
+                pyautogui.click(1000, 821)
                 for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR:
                     time.sleep(0.2)
                     pyautogui.click(x, y)
                     time.sleep(0.2)
                 walls_to_upgrade_elixir = 0
             elif walls_to_upgrade_elixir == 3:
-                pyautogui.click(920, 821)
+                pyautogui.click(1000, 821)
                 time.sleep(0.2)
-                pyautogui.click(920, 821)
+                pyautogui.click(1000, 821)
                 time.sleep(0.2)
-                pyautogui.click(920, 821)
+                pyautogui.click(1000, 821)
                 for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR:
                     time.sleep(0.2)
                     pyautogui.click(x, y)

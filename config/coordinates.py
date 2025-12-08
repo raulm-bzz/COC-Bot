@@ -13,7 +13,7 @@ CORDS_SURRENDER = [
 ]
 
 CORDS_VALKS = [
-    (640, 975),
+    (770, 975),
     (290, 490),
     (348, 452),
     (359, 413),
@@ -57,22 +57,22 @@ CORDS_VALKS = [
 ]
 
 CORDS_HEROS = [
-    (803, 969),
+    (930, 969),
     (639, 790),
-    (870, 969),
+    (1000, 969),
     (1367, 770),
-    (932, 969),
+    (1070, 969),
     (1612, 575),
-    (1005, 969),
+    (1130, 969),
     (1610, 578),
-    (803, 969),
-    (870, 969),
-    (932, 969),
-    (1005, 969),
+    (930, 969),
+    (1000, 969),
+    (1070, 969),
+    (1130, 969),
     ]
 
 CORDS_EARTHQUAKES = [
-    (1079, 981),
+    (1215, 981),
     (758, 311),
     (758, 311),
     (758, 311),
@@ -85,10 +85,10 @@ CORDS_EARTHQUAKES = [
 
 CORDS_UPGRADE_WALL = (845, 720, 1141, 767)  # x1, y1, x2, y2 coordinate to check for "Upgrade Wall" text
 
-CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD = [(1068, 834),
+CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD = [(1145, 834),
                                          (1150, 644)
                                          ]
-CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR = [(1220, 834),
+CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR = [(1300, 834),
                                            (1150, 644)
                                            ]
 
