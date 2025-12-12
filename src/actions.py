@@ -49,14 +49,15 @@ def attack():
     time.sleep(0.5)
     for x, y in CORDS_EARTHQUAKES:
         click_randomized(x, y)
-        time.sleep(0.1)
-    time.sleep(0.5)
+        time.sleep(0.05)
+    time.sleep(0.3)
     for x, y in rndm_CORDS_VALKS:
         click_randomized(x, y)
-        time.sleep(0.04)
+        time.sleep(0.01)
+    time.sleep(0.1)
     for x, y in CORDS_HEROS:
         click_randomized(x, y)
-        time.sleep(0.2)
+        time.sleep(0.07)
     time.sleep(1)
 
 def surrender(duration=0.0, defeated=True):
@@ -121,10 +122,10 @@ def auto_attack():
     while True:
         start_time = time.time()
         print(f"Function 'auto_attack' called.")
-        if cycles >= 3:
+        if cycles >= 3999:
             storage = get_storage()
             print(f"Storage status: Gold: {storage[0]}, Elixir: {storage[1]}")
-            if storage[0] == 26000000 and storage[1] == 26000000:
+            if storage[0] == 24000000 and storage[1] == 24000000:
                 upgrade_walls()
             cycles = 0
 
@@ -355,7 +356,7 @@ def upgrade_walls():
     elixir = out[1]
     walls_to_upgrade_gold = 0
     walls_to_upgrade_elixir = 0
-    wall_cost = 7000000
+    wall_cost = 4000000
 
 
     if gold <= wall_cost and elixir <= wall_cost:
@@ -373,7 +374,7 @@ def upgrade_walls():
             elif walls_to_upgrade_gold == 2:
                 pyautogui.click(1000, 821)
                 time.sleep(0.2)
-                pyautogui.click(1000, 821)
+                pyautogui.click(900, 800)
                 for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD:
                     time.sleep(0.2)
                     pyautogui.click(x, y)
@@ -382,9 +383,9 @@ def upgrade_walls():
             elif walls_to_upgrade_gold == 3:
                 pyautogui.click(1000, 821)
                 time.sleep(0.2)
-                pyautogui.click(1000, 821)
+                pyautogui.click(900, 800)
                 time.sleep(0.2)
-                pyautogui.click(1000, 821)
+                pyautogui.click(900, 800)
                 for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD:
                     time.sleep(0.2)
                     pyautogui.click(x, y)
@@ -423,7 +424,7 @@ def upgrade_walls():
             elif walls_to_upgrade_elixir == 2:
                 pyautogui.click(1000, 821)
                 time.sleep(0.2)
-                pyautogui.click(1000, 821)
+                pyautogui.click(900, 800)
                 for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR:
                     time.sleep(0.2)
                     pyautogui.click(x, y)
@@ -432,9 +433,9 @@ def upgrade_walls():
             elif walls_to_upgrade_elixir == 3:
                 pyautogui.click(1000, 821)
                 time.sleep(0.2)
-                pyautogui.click(1000, 821)
+                pyautogui.click(900, 800)
                 time.sleep(0.2)
-                pyautogui.click(1000, 821)
+                pyautogui.click(900, 800)
                 for x, y in CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR:
                     time.sleep(0.2)
                     pyautogui.click(x, y)

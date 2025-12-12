@@ -85,10 +85,10 @@ CORDS_EARTHQUAKES = [
 
 CORDS_UPGRADE_WALL = (845, 720, 1141, 767)  # x1, y1, x2, y2 coordinate to check for "Upgrade Wall" text
 
-CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD = [(1145, 834),
+CORDS_WALL_UPGRADE_CONFIRMATIONS_GOLD = [(1070, 834),
                                          (1150, 644)
                                          ]
-CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR = [(1300, 834),
+CORDS_WALL_UPGRADE_CONFIRMATIONS_ELIXIR = [(1200, 834),
                                            (1150, 644)
                                            ]
 
