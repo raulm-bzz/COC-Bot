@@ -24,8 +24,6 @@ globals().update({
     for name, data in HOTKEYS.items()
 })
 
-wall_cords = []
-
 def on_press(key):
     global CONFIG_MODE
     try:
@@ -33,27 +31,35 @@ def on_press(key):
         # ----------------------------
         # NORMAL MODE MAPPINGS
         # ----------------------------
+        def start_auto_attack():
+            STOP_EVENT.clear()
+            auto_attack()
+
         normal_mapping = {
             KEY_START_FIND: start_find,
             KEY_ATTACK: attack,
             KEY_SURRENDER: surrender,
             KEY_RECORD: record_position,
-            KEY_AUTO_ATTACK: auto_attack
+            KEY_AUTO_ATTACK: start_auto_attack
         }
 
         # ----------------------------
         # CONFIG MODE MAPPINGS
         # (example actions)
         # ----------------------------
-        config_mapping = {
-            "1": lambda: upgrade_walls()
-        }
+        config_mapping = {}
 
         # --- KILL ALWAYS WORKS ---
         if hasattr(key, "char") and key.char == KEY_KILL:
             kill_programm(executor)
             return False
-        
+
+        # --- STOP ALWAYS WORKS ---
+        if hasattr(key, "char") and key.char == KEY_STOP:
+            print("Stop requested - finishing current step...")
+            STOP_EVENT.set()
+            return
+
 
         # ==========================================================
         # ENTER CONFIG MODE (press `c`)
@@ -95,9 +101,6 @@ def on_press(key):
             print(f"[NORMAL] Pressed key: {key.char}")
             if func:
                 executor.submit(func)
-        if hasattr(key, "char") and key.char == KEY_TEST:
-            print(f"Test key {key} pressed!")
-            test()
 
     except AttributeError:
         pass

@@ -1,5 +1,6 @@
 pynput
 pyautogui
+pydirectinput
 numpy
 pillow
 easyocr
