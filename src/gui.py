@@ -1,18 +1,14 @@
-"""Tkinter front-end for the COC bot.
-
-Run this instead of listener.py to get a window with buttons, a live log and
-loot stats. The global hotkeys keep working exactly as before.
-"""
+"""Tkinter front-end for the COC bot - window with buttons, a live log, and
+global hotkeys."""
 
 # --- Standard Library ---
 import os
 import sys
-import json
 import queue
 import threading
 import traceback
 import tkinter as tk
-from tkinter import ttk
+import tkinter.font as tkfont
 from concurrent.futures import ThreadPoolExecutor
 
 # --- Third-party Libraries ---
@@ -29,20 +25,161 @@ import actions
 from hotkeys import HOTKEYS
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-LOOT_FILE = os.path.join(PROJECT_ROOT, "data", "loot_data.json")
 
-# --- Colors ---
-BG      = "#1b1d24"
-PANEL   = "#242731"
-BTN     = "#323647"
-BTN_HL  = "#3d4256"
-BORDER  = "#333747"
-FG      = "#e7e9ef"
-MUTED   = "#8b90a3"
-ACCENT  = "#4f8cff"
-GREEN   = "#3ddc84"
-ORANGE  = "#ffb020"
-RED     = "#ff5f56"
+# --- Colors: purple theme ---
+BG           = "#150f24"   # window background
+PANEL        = "#1f1736"   # card fill
+BTN          = "#2c2249"   # button idle
+BTN_HL       = "#3b2e5e"   # button hover
+BORDER       = "#372c54"   # subtle card outline
+FG           = "#f2eefb"   # primary text
+MUTED        = "#9c8fc0"   # secondary text
+HEADING      = "#b9a6e8"   # section labels
+ACCENT       = "#a855f7"   # primary purple accent
+ACCENT_HOVER = "#bd7bfa"
+ON_ACCENT    = "#1c1030"   # text on accent/red buttons
+RED          = "#fb7185"
+RED_HOVER    = "#fda1ac"
+GREEN        = "#34d399"
+ORANGE       = "#fbbf24"
+LOG_BG       = "#130d20"
+LOG_FG       = "#d7cdee"
+
+
+def _rounded_points(x1, y1, x2, y2, r):
+    """Point list for a rounded rectangle, meant for create_polygon(smooth=True)."""
+    r = max(0, min(r, (x2 - x1) / 2, (y2 - y1) / 2))
+    return [
+        x1 + r, y1,
+        x2 - r, y1,
+        x2, y1,
+        x2, y1 + r,
+        x2, y2 - r,
+        x2, y2,
+        x2 - r, y2,
+        x1 + r, y2,
+        x1, y2,
+        x1, y2 - r,
+        x1, y1 + r,
+        x1, y1,
+    ]
+
+
+def _parent_bg(parent, fallback=BG):
+    try:
+        return parent.cget("bg")
+    except tk.TclError:
+        return fallback
+
+
+class RoundedCard(tk.Canvas):
+    """A Canvas with a rounded-rect background and a same-colored `.body`
+    Frame inset inside it, so normal widgets can be packed/gridded as usual."""
+
+    def __init__(self, parent, fill, radius=18, border=None, bg_out=None, **kw):
+        super().__init__(parent, bg=bg_out or _parent_bg(parent), highlightthickness=0,
+                          bd=0, **kw)
+        self.fill = fill
+        self.radius = radius
+        self.border = border
+        self.inset = max(radius - 6, 6)
+        self.body = tk.Frame(self, bg=fill)
+        self._win = self.create_window(self.inset, self.inset, anchor="nw", window=self.body)
+        self.bind("<Configure>", self._redraw)
+
+    def _redraw(self, event=None):
+        w, h = self.winfo_width(), self.winfo_height()
+        self.delete("bg")
+        if w > 2 and h > 2:
+            pts = _rounded_points(1, 1, w - 1, h - 1, self.radius)
+            self.create_polygon(pts, smooth=True, fill=self.fill,
+                                 outline=self.border or self.fill, tags="bg")
+            self.tag_lower("bg")
+        self.coords(self._win, self.inset, self.inset)
+        self.itemconfigure(self._win, width=max(0, w - 2 * self.inset),
+                           height=max(0, h - 2 * self.inset))
+
+    def fit_height(self):
+        """Size the card to its body's natural content height (call after packing)."""
+        self.body.update_idletasks()
+        self.configure(height=self.body.winfo_reqheight() + 2 * self.inset)
+
+
+class RoundedButton(tk.Canvas):
+    """A clickable rounded-rect button drawn on a Canvas, since ttk/tk widgets
+    can't do border-radius."""
+
+    def __init__(self, parent, text, command, fill, hover, fg=FG,
+                 radius=10, font=("Segoe UI Semibold", 10), height=38,
+                 width=None, padx=16, **kw):
+        self._font = tkfont.Font(family=font[0], size=font[1],
+                                  weight=font[2] if len(font) > 2 else "normal")
+        if width is None:
+            width = self._font.measure(text) + padx * 2
+        super().__init__(parent, bg=_parent_bg(parent), highlightthickness=0, bd=0,
+                         width=width, height=height, cursor="hand2", **kw)
+        self.command = command
+        self.text = text
+        self.fill = fill
+        self.hover = hover
+        self.fg = fg
+        self.radius = radius
+        self.font = font
+        self._hovering = False
+
+        self.bind("<Configure>", self._redraw)
+        self.bind("<Enter>", self._on_enter)
+        self.bind("<Leave>", self._on_leave)
+        self.bind("<Button-1>", self._on_click)
+
+    def _redraw(self, event=None):
+        w, h = max(self.winfo_width(), 2), max(self.winfo_height(), 2)
+        self.delete("all")
+        color = self.hover if self._hovering else self.fill
+        pts = _rounded_points(1, 1, w - 1, h - 1, min(self.radius, h / 2 - 1))
+        self.create_polygon(pts, smooth=True, fill=color, outline=color)
+        self.create_text(w / 2, h / 2, text=self.text, fill=self.fg, font=self.font)
+
+    def _on_enter(self, _e):
+        self._hovering = True
+        self._redraw()
+
+    def _on_leave(self, _e):
+        self._hovering = False
+        self._redraw()
+
+    def _on_click(self, _e):
+        if self.command:
+            self.command()
+
+
+class StatusPill(tk.Canvas):
+    """A small rounded 'chip' showing a colored dot + status text."""
+
+    def __init__(self, parent, fill, font=("Segoe UI Semibold", 10), **kw):
+        super().__init__(parent, bg=_parent_bg(parent), highlightthickness=0, bd=0, **kw)
+        self.fill = fill
+        self.font_spec = font
+        self._font = tkfont.Font(family=font[0], size=font[1],
+                                  weight=font[2] if len(font) > 2 else "normal")
+        self.text = "Idle"
+        self.color = MUTED
+        self.set(self.text, self.color)
+
+    def set(self, text, color):
+        self.text, self.color = text, color
+        pad_x, dot_r, gap = 14, 4, 8
+        w = pad_x * 2 + dot_r * 2 + gap + self._font.measure(text)
+        h = 30
+        self.configure(width=w, height=h)
+        self.delete("all")
+        pts = _rounded_points(0, 0, w, h, h / 2)
+        self.create_polygon(pts, smooth=True, fill=self.fill, outline=self.fill)
+        cx, cy = pad_x + dot_r, h / 2
+        self.create_oval(cx - dot_r, cy - dot_r, cx + dot_r, cy + dot_r,
+                         fill=color, outline=color)
+        self.create_text(cx + dot_r + gap, cy, text=text, fill=FG,
+                         font=self.font_spec, anchor="w")
 
 
 class LogStream:
@@ -77,11 +214,10 @@ class BotGUI:
         self.current_action = None
 
         root.title("COC Attack Bot")
-        root.geometry("940x660")
-        root.minsize(760, 520)
+        root.geometry("940x680")
+        root.minsize(760, 540)
         root.configure(bg=BG)
 
-        self._build_styles()
         self._build_header()
         self._build_body()
         self._build_log()
@@ -91,7 +227,6 @@ class BotGUI:
         sys.stderr = LogStream(self.log_queue, sys.__stderr__)
 
         self._start_hotkey_listener()
-        self.refresh_stats()
         self._tick()
 
         print("GUI ready. Hotkeys are active globally.")
@@ -99,140 +234,121 @@ class BotGUI:
     # ------------------------------------------------------------------
     # Layout
     # ------------------------------------------------------------------
-    def _build_styles(self):
-        style = ttk.Style()
-        style.theme_use("clam")
-        style.configure("TFrame", background=BG)
-        style.configure("Panel.TFrame", background=PANEL)
-        style.configure("TLabel", background=BG, foreground=FG, font=("Segoe UI", 10))
-        style.configure("Panel.TLabel", background=PANEL, foreground=FG, font=("Segoe UI", 10))
-        style.configure("Muted.TLabel", background=PANEL, foreground=MUTED, font=("Segoe UI", 9))
-        style.configure("Title.TLabel", background=BG, foreground=FG, font=("Segoe UI Semibold", 16))
-        style.configure("Heading.TLabel", background=PANEL, foreground=MUTED,
-                        font=("Segoe UI Semibold", 9))
-        style.configure("Value.TLabel", background=PANEL, foreground=FG,
-                        font=("Consolas", 11))
-        style.configure("Vertical.TScrollbar", background=BTN, troughcolor="#15171d",
-                        bordercolor="#15171d", arrowcolor=MUTED, relief="flat")
-        style.map("Vertical.TScrollbar", background=[("active", BTN_HL)])
-
-    def _button(self, parent, text, command, color=BTN, fg=FG, hover=BTN_HL):
-        btn = tk.Button(
-            parent, text=text, command=command,
-            bg=color, fg=fg, activebackground=hover, activeforeground=fg,
-            relief="flat", bd=0, padx=12, pady=9, cursor="hand2",
-            font=("Segoe UI Semibold", 10), highlightthickness=0,
-        )
-        btn.bind("<Enter>", lambda e: btn.configure(bg=hover))
-        btn.bind("<Leave>", lambda e: btn.configure(bg=color))
-        return btn
-
     def _build_header(self):
-        header = ttk.Frame(self.root, style="TFrame")
-        header.pack(fill="x", padx=16, pady=(14, 8))
+        header = tk.Frame(self.root, bg=BG)
+        header.pack(fill="x", padx=18, pady=(18, 10))
 
-        ttk.Label(header, text="COC Attack Bot", style="Title.TLabel").pack(side="left")
+        tk.Label(header, text="COC Attack Bot", bg=BG, fg=FG,
+                font=("Segoe UI Semibold", 17)).pack(side="left")
 
-        self.status_dot = tk.Label(header, text="●", bg=BG, fg=MUTED,
-                                   font=("Segoe UI", 14))
-        self.status_dot.pack(side="right", padx=(8, 0))
-        self.status_label = tk.Label(header, text="Idle", bg=BG, fg=MUTED,
-                                     font=("Segoe UI Semibold", 11))
-        self.status_label.pack(side="right")
+        self.status_pill = StatusPill(header, fill=PANEL)
+        self.status_pill.pack(side="right")
 
     def _build_body(self):
-        body = ttk.Frame(self.root, style="TFrame")
-        body.pack(fill="x", padx=16)
+        body = tk.Frame(self.root, bg=BG)
+        body.pack(fill="x", padx=18)
         body.columnconfigure(0, weight=1, uniform="col")
         body.columnconfigure(1, weight=1, uniform="col")
 
-        # --- Actions panel ---
-        actions_panel = tk.Frame(body, bg=PANEL, highlightthickness=1,
-                                 highlightbackground=BORDER)
-        actions_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 8))
+        # --- Actions card ---
+        actions_card = RoundedCard(body, fill=PANEL, radius=18, border=BORDER, bg_out=BG)
+        actions_card.grid(row=0, column=0, sticky="nsew", padx=(0, 8))
+        a = actions_card.body
 
-        ttk.Label(actions_panel, text="ACTIONS", style="Heading.TLabel").pack(
-            anchor="w", padx=14, pady=(12, 8))
+        tk.Label(a, text="ACTIONS", bg=PANEL, fg=HEADING,
+                font=("Segoe UI Semibold", 9)).pack(anchor="w", padx=4, pady=(2, 10))
 
-        grid = tk.Frame(actions_panel, bg=PANEL)
-        grid.pack(fill="x", padx=14, pady=(0, 8))
+        grid = tk.Frame(a, bg=PANEL)
+        grid.pack(fill="x", padx=4)
         grid.columnconfigure(0, weight=1)
         grid.columnconfigure(1, weight=1)
 
         buttons = [
             ("Start Find", lambda: self.run_action("start_find", actions.start_find)),
-            ("Attack", lambda: self.run_action("attack", actions.attack)),
+            ("Attack", lambda: self.run_action("attack", lambda: actions.attack(self.sequence_var.get()))),
             ("Surrender", lambda: self.run_action("surrender", actions.surrender)),
             ("Record Position", lambda: self.run_action("record_position", actions.record_position)),
         ]
         for i, (text, cmd) in enumerate(buttons):
-            btn = self._button(grid, text, cmd)
-            btn.grid(row=i // 2, column=i % 2, sticky="ew", padx=3, pady=3)
+            btn = RoundedButton(grid, text, cmd, fill=BTN, hover=BTN_HL, radius=10, height=40)
+            btn.grid(row=i // 2, column=i % 2, sticky="ew", padx=4, pady=4)
 
-        run_row = tk.Frame(actions_panel, bg=PANEL)
-        run_row.pack(fill="x", padx=14, pady=(4, 14))
+        seq_row = tk.Frame(a, bg=PANEL)
+        seq_row.pack(fill="x", padx=4, pady=(10, 4))
+        tk.Label(seq_row, text="Sequence:", bg=PANEL, fg=MUTED,
+                font=("Segoe UI", 9)).pack(side="left")
+
+        seq_names = actions.list_sequences() or ["(no sequences found)"]
+        self.sequence_var = tk.StringVar(value=seq_names[0])
+
+        self.sequence_menu = tk.OptionMenu(seq_row, self.sequence_var, *seq_names)
+        self.sequence_menu.configure(bg=BTN, fg=FG, activebackground=BTN_HL,
+                                     activeforeground=FG, highlightthickness=0,
+                                     bd=0, font=("Segoe UI", 9), width=14, anchor="w")
+        self.sequence_menu["menu"].configure(bg=PANEL, fg=FG,
+                                             activebackground=BTN_HL, activeforeground=FG)
+        self.sequence_menu.pack(side="left", padx=(8, 0))
+
+        run_row = tk.Frame(a, bg=PANEL)
+        run_row.pack(fill="x", padx=4, pady=(6, 4))
         run_row.columnconfigure(0, weight=1)
         run_row.columnconfigure(1, weight=1)
 
-        self._button(run_row, "▶  Auto Attack", self.start_auto_attack,
-                     color=ACCENT, fg="#0d1117", hover="#6ea1ff").grid(
-                         row=0, column=0, sticky="ew", padx=3)
-        self._button(run_row, "■  Stop", self.stop_auto_attack,
-                     color=RED, fg="#0d1117", hover="#ff7b73").grid(
-                         row=0, column=1, sticky="ew", padx=3)
+        RoundedButton(run_row, "▶  Auto Attack", self.start_auto_attack,
+                     fill=ACCENT, hover=ACCENT_HOVER, fg=ON_ACCENT, radius=10,
+                     height=42).grid(row=0, column=0, sticky="ew", padx=4)
+        RoundedButton(run_row, "■  Stop", self.stop_auto_attack,
+                     fill=RED, hover=RED_HOVER, fg=ON_ACCENT, radius=10,
+                     height=42).grid(row=0, column=1, sticky="ew", padx=4)
 
-        # --- Stats panel ---
-        stats_panel = tk.Frame(body, bg=PANEL, highlightthickness=1,
-                               highlightbackground=BORDER)
-        stats_panel.grid(row=0, column=1, sticky="nsew", padx=(8, 0))
+        actions_card.fit_height()
 
-        head = tk.Frame(stats_panel, bg=PANEL)
-        head.pack(fill="x", padx=14, pady=(12, 8))
-        ttk.Label(head, text="LOOT STATS", style="Heading.TLabel").pack(side="left")
-        tk.Button(head, text="Refresh", command=self.refresh_stats, bg=PANEL, fg=MUTED,
-                  activebackground=PANEL, activeforeground=FG, relief="flat", bd=0,
-                  cursor="hand2", font=("Segoe UI", 9)).pack(side="right")
+        # --- Hotkeys card ---
+        hotkeys_card = RoundedCard(body, fill=PANEL, radius=18, border=BORDER, bg_out=BG)
+        hotkeys_card.grid(row=0, column=1, sticky="nsew", padx=(8, 0))
+        h = hotkeys_card.body
 
-        self.stat_vars = {}
-        for label in ("Recorded battles", "Total gold", "Total elixir",
-                      "Total dark", "Last battle"):
-            row = tk.Frame(stats_panel, bg=PANEL)
-            row.pack(fill="x", padx=14, pady=2)
-            ttk.Label(row, text=label, style="Muted.TLabel").pack(side="left")
-            var = tk.StringVar(value="-")
-            ttk.Label(row, textvariable=var, style="Value.TLabel").pack(side="right")
-            self.stat_vars[label] = var
+        tk.Label(h, text="HOTKEYS", bg=PANEL, fg=HEADING,
+                font=("Segoe UI Semibold", 9)).pack(anchor="w", padx=4, pady=(2, 10))
 
-        # --- Hotkey reference ---
-        hk = tk.Frame(stats_panel, bg=PANEL)
-        hk.pack(fill="x", padx=14, pady=(12, 14))
-        ttk.Label(hk, text="HOTKEYS", style="Heading.TLabel").pack(anchor="w", pady=(0, 4))
-        hint = "   ".join(f"{d['key']} = {d['description']}" for d in HOTKEYS.values())
-        tk.Label(hk, text=hint, bg=PANEL, fg=MUTED, font=("Consolas", 8),
-                 justify="left", wraplength=380).pack(anchor="w")
+        for d in HOTKEYS.values():
+            row = tk.Frame(h, bg=PANEL)
+            row.pack(fill="x", padx=4, pady=5)
+            tk.Label(row, text=d["key"].upper(), bg=BTN, fg=ACCENT,
+                    font=("Consolas", 11, "bold"), width=3,
+                    relief="solid", bd=1, highlightbackground=BORDER
+                    ).pack(side="left", ipady=3)
+            tk.Label(row, text=d["description"], bg=PANEL, fg=FG,
+                    font=("Segoe UI", 10)).pack(side="left", padx=(10, 0))
+
+        hotkeys_card.fit_height()
 
     def _build_log(self):
-        wrapper = tk.Frame(self.root, bg=PANEL, highlightthickness=1,
-                           highlightbackground=BORDER)
-        wrapper.pack(fill="both", expand=True, padx=16, pady=16)
+        card = RoundedCard(self.root, fill=PANEL, radius=18, border=BORDER, bg_out=BG)
+        card.pack(fill="both", expand=True, padx=18, pady=18)
+        wrap = card.body
 
-        head = tk.Frame(wrapper, bg=PANEL)
-        head.pack(fill="x", padx=14, pady=(10, 4))
-        ttk.Label(head, text="LOG", style="Heading.TLabel").pack(side="left")
-        tk.Button(head, text="Clear", command=self.clear_log, bg=PANEL, fg=MUTED,
-                  activebackground=PANEL, activeforeground=FG, relief="flat", bd=0,
-                  cursor="hand2", font=("Segoe UI", 9)).pack(side="right")
+        head = tk.Frame(wrap, bg=PANEL)
+        head.pack(fill="x", pady=(0, 6))
+        tk.Label(head, text="LOG", bg=PANEL, fg=HEADING,
+                font=("Segoe UI Semibold", 9)).pack(side="left")
+        RoundedButton(head, "Clear", self.clear_log, fill=PANEL, hover=BTN,
+                     fg=MUTED, radius=8, height=24, font=("Segoe UI", 9),
+                     padx=10).pack(side="right")
 
-        self.log = tk.Text(wrapper, bg="#15171d", fg="#c8ccd8", bd=0,
+        text_frame = tk.Frame(wrap, bg=LOG_BG)
+        text_frame.pack(fill="both", expand=True)
+
+        self.log = tk.Text(text_frame, bg=LOG_BG, fg=LOG_FG, bd=0,
                            font=("Consolas", 9), wrap="word", insertbackground=FG,
                            padx=10, pady=8, state="disabled")
-        scroll = tk.Scrollbar(wrapper, command=self.log.yview, bg=BTN,
-                              troughcolor="#15171d", activebackground=BTN_HL,
+        scroll = tk.Scrollbar(text_frame, command=self.log.yview, bg=BTN,
+                              troughcolor=LOG_BG, activebackground=BTN_HL,
                               highlightthickness=0, bd=0, relief="flat",
                               elementborderwidth=0, width=12)
         self.log.configure(yscrollcommand=scroll.set)
-        scroll.pack(side="right", fill="y", padx=(0, 4), pady=(0, 10))
-        self.log.pack(fill="both", expand=True, padx=(10, 0), pady=(0, 10))
+        scroll.pack(side="right", fill="y")
+        self.log.pack(fill="both", expand=True)
 
     # ------------------------------------------------------------------
     # Action plumbing
@@ -257,7 +373,8 @@ class BotGUI:
 
     def start_auto_attack(self):
         actions.STOP_EVENT.clear()
-        self.run_action("auto_attack", actions.auto_attack)
+        sequence_name = self.sequence_var.get()
+        self.run_action("auto_attack", lambda: actions.auto_attack(sequence_name))
 
     def stop_auto_attack(self):
         if self.current_action is None:
@@ -272,12 +389,75 @@ class BotGUI:
         os._exit(0)
 
     # ------------------------------------------------------------------
+    # Sequence recording
+    # ------------------------------------------------------------------
+    def _toggle_recording(self):
+        """Called from the hotkey listener thread - only touches Tk via root.after."""
+        if actions.is_recording():
+            events = actions.stop_recording()
+            self.root.after(0, lambda: self._prompt_recording_name(events))
+        else:
+            actions.start_recording()
+
+    def _prompt_recording_name(self, events):
+        if not events:
+            print("Recording had no events - nothing to save.")
+            return
+
+        actions.set_input_locked(True)
+
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Save Recording")
+        dialog.configure(bg=BG)
+        dialog.resizable(False, False)
+        dialog.transient(self.root)
+        dialog.grab_set()
+        # Covers Save, Discard, Esc, and the window's own close button alike.
+        dialog.bind("<Destroy>", lambda _e: actions.set_input_locked(False))
+
+        tk.Label(dialog, text="Name this sequence:", bg=BG, fg=FG,
+                font=("Segoe UI Semibold", 10)).pack(padx=18, pady=(18, 8), anchor="w")
+
+        entry = tk.Entry(dialog, bg=PANEL, fg=FG, insertbackground=FG,
+                         relief="flat", font=("Segoe UI", 10), width=30)
+        entry.pack(padx=18, pady=(0, 14), fill="x", ipady=4)
+        entry.focus_set()
+
+        def do_save(_e=None):
+            name = entry.get().strip()
+            if not name:
+                return
+            actions.save_recording(name, events)
+            self._refresh_sequence_menu()
+            dialog.destroy()
+
+        btn_row = tk.Frame(dialog, bg=BG)
+        btn_row.pack(padx=18, pady=(0, 18), fill="x")
+        RoundedButton(btn_row, "Save", do_save, fill=ACCENT, hover=ACCENT_HOVER,
+                     fg=ON_ACCENT, radius=10, height=34).pack(side="right")
+        RoundedButton(btn_row, "Discard", dialog.destroy, fill=BTN, hover=BTN_HL,
+                     fg=FG, radius=10, height=34).pack(side="right", padx=(0, 8))
+
+        entry.bind("<Return>", do_save)
+        dialog.bind("<Escape>", lambda _e: dialog.destroy())
+
+    def _refresh_sequence_menu(self):
+        """Repopulates the sequence dropdown, e.g. after a new recording is saved."""
+        names = actions.list_sequences() or ["(no sequences found)"]
+        menu = self.sequence_menu["menu"]
+        menu.delete(0, "end")
+        for name in names:
+            menu.add_command(label=name, command=lambda n=name: self.sequence_var.set(n))
+        if self.sequence_var.get() not in names:
+            self.sequence_var.set(names[0])
+
+    # ------------------------------------------------------------------
     # Hotkeys
     # ------------------------------------------------------------------
     def _start_hotkey_listener(self):
         mapping = {
             HOTKEYS["START_FIND"]["key"]: ("start_find", actions.start_find),
-            HOTKEYS["ATTACK"]["key"]: ("attack", actions.attack),
+            HOTKEYS["ATTACK"]["key"]: ("attack", lambda: actions.attack(self.sequence_var.get())),
             HOTKEYS["SURRENDER"]["key"]: ("surrender", actions.surrender),
             HOTKEYS["RECORD"]["key"]: ("record_position", actions.record_position),
         }
@@ -287,14 +467,34 @@ class BotGUI:
 
         def on_press(key):
             char = getattr(key, "char", None)
-            if char is None:
-                return
+
+            # --- KILL ALWAYS WORKS, even mid-recording / while naming ---
             if char == kill_key:
                 self.quit_app()
-            elif char == auto_key:
-                self.start_auto_attack()
-            elif char == stop_key:
+                return
+
+            # --- While the "name this sequence" dialog is up, ignore every
+            # other hotkey so typing e.g. "s" doesn't also trigger attack() ---
+            if actions.is_input_locked():
+                return
+
+            if key == keyboard.Key.home:
+                self._toggle_recording()
+                return
+
+            if char == stop_key:
                 self.stop_auto_attack()
+                return
+
+            if actions.is_recording():
+                key_name = char if char is not None else str(key).replace("Key.", "")
+                actions.record_key_event(key_name)
+                return
+
+            if char is None:
+                return
+            if char == auto_key:
+                self.start_auto_attack()
             elif char in mapping:
                 name, func = mapping[char]
                 self.run_action(name, func)
@@ -335,36 +535,13 @@ class BotGUI:
             text, color = "Stopping...", ORANGE
         else:
             text, color = f"Running: {action}", GREEN
-        if self.status_label.cget("text") != text:
-            self.status_label.configure(text=text, fg=color)
-            self.status_dot.configure(fg=color)
+        if text != self.status_pill.text:
+            self.status_pill.set(text, color)
 
     def clear_log(self):
         self.log.configure(state="normal")
         self.log.delete("1.0", "end")
         self.log.configure(state="disabled")
-
-    def refresh_stats(self):
-        try:
-            with open(LOOT_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            if not isinstance(data, list):
-                data = []
-        except (OSError, json.JSONDecodeError):
-            data = []
-
-        self.stat_vars["Recorded battles"].set(str(len(data)))
-        for label, key in (("Total gold", "total_gold"),
-                           ("Total elixir", "total_elixir"),
-                           ("Total dark", "total_dark")):
-            total = sum(entry.get(key, 0) or 0 for entry in data)
-            self.stat_vars[label].set(f"{total:,}".replace(",", " "))
-
-        if data:
-            last = data[-1]
-            self.stat_vars["Last battle"].set(last.get("timestamp", "-")[-8:])
-        else:
-            self.stat_vars["Last battle"].set("-")
 
 
 def main():

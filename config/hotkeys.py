@@ -7,5 +7,6 @@ HOTKEYS = {
     "KILL":             { "key": "$", "description": "Kill Script" },
     "AUTO_ATTACK":      { "key": "z", "description": "Auto Attack Cycle" },
     "STOP":             { "key": "ä", "description": "Stop" },
-    "CONFIGURE":        { "key": "c", "description": "Configure" }
+    "CONFIGURE":        { "key": "c", "description": "Configure" },
+    "RECORD_SEQUENCE":  { "key": "Home", "description": "Start/Stop Recording Sequence" }
 }

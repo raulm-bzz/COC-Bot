@@ -24,7 +24,7 @@ if errorlevel 1 (
     )
 )
 
-REM Start the GUI. For the old terminal-only mode, run: py -3.12 src\listener.py
+REM Start the GUI.
 %PY% src\gui.py
 
 REM Keep the window open if the bot crashed or exited, so the error is readable.

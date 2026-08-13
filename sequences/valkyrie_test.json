@@ -1,0 +1,589 @@
+{
+    "name": "valkyrie_test",
+    "events": [
+        {
+            "type": "delay",
+            "duration": 1320
+        },
+        {
+            "type": "press",
+            "key": "1"
+        },
+        {
+            "type": "delay",
+            "duration": 1334
+        },
+        {
+            "type": "click",
+            "coords_x": 424,
+            "coords_y": 377
+        },
+        {
+            "type": "delay",
+            "duration": 315
+        },
+        {
+            "type": "click",
+            "coords_x": 463,
+            "coords_y": 340
+        },
+        {
+            "type": "delay",
+            "duration": 266
+        },
+        {
+            "type": "click",
+            "coords_x": 463,
+            "coords_y": 339
+        },
+        {
+            "type": "delay",
+            "duration": 268
+        },
+        {
+            "type": "click",
+            "coords_x": 507,
+            "coords_y": 298
+        },
+        {
+            "type": "delay",
+            "duration": 216
+        },
+        {
+            "type": "click",
+            "coords_x": 517,
+            "coords_y": 290
+        },
+        {
+            "type": "delay",
+            "duration": 345
+        },
+        {
+            "type": "click",
+            "coords_x": 571,
+            "coords_y": 237
+        },
+        {
+            "type": "delay",
+            "duration": 345
+        },
+        {
+            "type": "click",
+            "coords_x": 611,
+            "coords_y": 210
+        },
+        {
+            "type": "delay",
+            "duration": 293
+        },
+        {
+            "type": "click",
+            "coords_x": 625,
+            "coords_y": 200
+        },
+        {
+            "type": "delay",
+            "duration": 322
+        },
+        {
+            "type": "click",
+            "coords_x": 688,
+            "coords_y": 162
+        },
+        {
+            "type": "delay",
+            "duration": 285
+        },
+        {
+            "type": "click",
+            "coords_x": 750,
+            "coords_y": 131
+        },
+        {
+            "type": "delay",
+            "duration": 285
+        },
+        {
+            "type": "click",
+            "coords_x": 793,
+            "coords_y": 96
+        },
+        {
+            "type": "delay",
+            "duration": 300
+        },
+        {
+            "type": "click",
+            "coords_x": 837,
+            "coords_y": 74
+        },
+        {
+            "type": "delay",
+            "duration": 488
+        },
+        {
+            "type": "click",
+            "coords_x": 1223,
+            "coords_y": 107
+        },
+        {
+            "type": "delay",
+            "duration": 322
+        },
+        {
+            "type": "click",
+            "coords_x": 1312,
+            "coords_y": 142
+        },
+        {
+            "type": "delay",
+            "duration": 338
+        },
+        {
+            "type": "click",
+            "coords_x": 1329,
+            "coords_y": 183
+        },
+        {
+            "type": "delay",
+            "duration": 255
+        },
+        {
+            "type": "click",
+            "coords_x": 1370,
+            "coords_y": 223
+        },
+        {
+            "type": "delay",
+            "duration": 277
+        },
+        {
+            "type": "click",
+            "coords_x": 1396,
+            "coords_y": 245
+        },
+        {
+            "type": "delay",
+            "duration": 300
+        },
+        {
+            "type": "click",
+            "coords_x": 1440,
+            "coords_y": 280
+        },
+        {
+            "type": "delay",
+            "duration": 293
+        },
+        {
+            "type": "click",
+            "coords_x": 1495,
+            "coords_y": 313
+        },
+        {
+            "type": "delay",
+            "duration": 353
+        },
+        {
+            "type": "click",
+            "coords_x": 1564,
+            "coords_y": 359
+        },
+        {
+            "type": "delay",
+            "duration": 292
+        },
+        {
+            "type": "click",
+            "coords_x": 1629,
+            "coords_y": 408
+        },
+        {
+            "type": "delay",
+            "duration": 374
+        },
+        {
+            "type": "click",
+            "coords_x": 1670,
+            "coords_y": 451
+        },
+        {
+            "type": "delay",
+            "duration": 420
+        },
+        {
+            "type": "click",
+            "coords_x": 1613,
+            "coords_y": 606
+        },
+        {
+            "type": "delay",
+            "duration": 307
+        },
+        {
+            "type": "click",
+            "coords_x": 1568,
+            "coords_y": 631
+        },
+        {
+            "type": "delay",
+            "duration": 300
+        },
+        {
+            "type": "click",
+            "coords_x": 1489,
+            "coords_y": 674
+        },
+        {
+            "type": "delay",
+            "duration": 293
+        },
+        {
+            "type": "click",
+            "coords_x": 1455,
+            "coords_y": 727
+        },
+        {
+            "type": "delay",
+            "duration": 306
+        },
+        {
+            "type": "click",
+            "coords_x": 1414,
+            "coords_y": 761
+        },
+        {
+            "type": "delay",
+            "duration": 270
+        },
+        {
+            "type": "click",
+            "coords_x": 1371,
+            "coords_y": 792
+        },
+        {
+            "type": "delay",
+            "duration": 279
+        },
+        {
+            "type": "click",
+            "coords_x": 1280,
+            "coords_y": 835
+        },
+        {
+            "type": "delay",
+            "duration": 270
+        },
+        {
+            "type": "click",
+            "coords_x": 1231,
+            "coords_y": 868
+        },
+        {
+            "type": "delay",
+            "duration": 456
+        },
+        {
+            "type": "click",
+            "coords_x": 638,
+            "coords_y": 849
+        },
+        {
+            "type": "delay",
+            "duration": 375
+        },
+        {
+            "type": "click",
+            "coords_x": 570,
+            "coords_y": 739
+        },
+        {
+            "type": "delay",
+            "duration": 285
+        },
+        {
+            "type": "click",
+            "coords_x": 522,
+            "coords_y": 710
+        },
+        {
+            "type": "delay",
+            "duration": 330
+        },
+        {
+            "type": "click",
+            "coords_x": 446,
+            "coords_y": 646
+        },
+        {
+            "type": "delay",
+            "duration": 251
+        },
+        {
+            "type": "click",
+            "coords_x": 409,
+            "coords_y": 608
+        },
+        {
+            "type": "delay",
+            "duration": 305
+        },
+        {
+            "type": "click",
+            "coords_x": 593,
+            "coords_y": 748
+        },
+        {
+            "type": "delay",
+            "duration": 269
+        },
+        {
+            "type": "click",
+            "coords_x": 685,
+            "coords_y": 810
+        },
+        {
+            "type": "delay",
+            "duration": 265
+        },
+        {
+            "type": "click",
+            "coords_x": 737,
+            "coords_y": 860
+        },
+        {
+            "type": "delay",
+            "duration": 253
+        },
+        {
+            "type": "click",
+            "coords_x": 781,
+            "coords_y": 894
+        },
+        {
+            "type": "delay",
+            "duration": 405
+        },
+        {
+            "type": "click",
+            "coords_x": 457,
+            "coords_y": 404
+        },
+        {
+            "type": "delay",
+            "duration": 315
+        },
+        {
+            "type": "click",
+            "coords_x": 502,
+            "coords_y": 317
+        },
+        {
+            "type": "delay",
+            "duration": 359
+        },
+        {
+            "type": "click",
+            "coords_x": 641,
+            "coords_y": 246
+        },
+        {
+            "type": "delay",
+            "duration": 2123
+        },
+        {
+            "type": "press",
+            "key": "q"
+        },
+        {
+            "type": "delay",
+            "duration": 383
+        },
+        {
+            "type": "click",
+            "coords_x": 645,
+            "coords_y": 790
+        },
+        {
+            "type": "delay",
+            "duration": 561
+        },
+        {
+            "type": "press",
+            "key": "w"
+        },
+        {
+            "type": "delay",
+            "duration": 407
+        },
+        {
+            "type": "click",
+            "coords_x": 664,
+            "coords_y": 819
+        },
+        {
+            "type": "delay",
+            "duration": 418
+        },
+        {
+            "type": "press",
+            "key": "e"
+        },
+        {
+            "type": "delay",
+            "duration": 234
+        },
+        {
+            "type": "click",
+            "coords_x": 596,
+            "coords_y": 810
+        },
+        {
+            "type": "delay",
+            "duration": 437
+        },
+        {
+            "type": "press",
+            "key": "r"
+        },
+        {
+            "type": "delay",
+            "duration": 313
+        },
+        {
+            "type": "click",
+            "coords_x": 588,
+            "coords_y": 819
+        },
+        {
+            "type": "delay",
+            "duration": 519
+        },
+        {
+            "type": "press",
+            "key": "q"
+        },
+        {
+            "type": "delay",
+            "duration": 273
+        },
+        {
+            "type": "press",
+            "key": "w"
+        },
+        {
+            "type": "delay",
+            "duration": 265
+        },
+        {
+            "type": "press",
+            "key": "e"
+        },
+        {
+            "type": "delay",
+            "duration": 415
+        },
+        {
+            "type": "press",
+            "key": "r"
+        },
+        {
+            "type": "delay",
+            "duration": 1632
+        },
+        {
+            "type": "press",
+            "key": "a"
+        },
+        {
+            "type": "delay",
+            "duration": 1990
+        },
+        {
+            "type": "click",
+            "coords_x": 798,
+            "coords_y": 337
+        },
+        {
+            "type": "delay",
+            "duration": 164
+        },
+        {
+            "type": "click",
+            "coords_x": 798,
+            "coords_y": 337
+        },
+        {
+            "type": "delay",
+            "duration": 180
+        },
+        {
+            "type": "click",
+            "coords_x": 798,
+            "coords_y": 337
+        },
+        {
+            "type": "delay",
+            "duration": 211
+        },
+        {
+            "type": "click",
+            "coords_x": 798,
+            "coords_y": 337
+        },
+        {
+            "type": "delay",
+            "duration": 225
+        },
+        {
+            "type": "click",
+            "coords_x": 798,
+            "coords_y": 337
+        },
+        {
+            "type": "delay",
+            "duration": 1252
+        },
+        {
+            "type": "click",
+            "coords_x": 1206,
+            "coords_y": 333
+        },
+        {
+            "type": "delay",
+            "duration": 165
+        },
+        {
+            "type": "click",
+            "coords_x": 1206,
+            "coords_y": 333
+        },
+        {
+            "type": "delay",
+            "duration": 173
+        },
+        {
+            "type": "click",
+            "coords_x": 1206,
+            "coords_y": 333
+        },
+        {
+            "type": "delay",
+            "duration": 164
+        },
+        {
+            "type": "click",
+            "coords_x": 1206,
+            "coords_y": 333
+        },
+        {
+            "type": "delay",
+            "duration": 158
+        },
+        {
+            "type": "click",
+            "coords_x": 1206,
+            "coords_y": 333
+        }
+    ]
+}
