@@ -212,6 +212,9 @@ class BotGUI:
         self.log_queue = queue.Queue()
         self.busy_lock = threading.Lock()
         self.current_action = None
+        self.locked = False
+        self._lock_overlay = None
+        self._lock_follow_id = None
 
         root.title("COC Attack Bot")
         root.geometry("940x680")
@@ -452,6 +455,64 @@ class BotGUI:
             self.sequence_var.set(names[0])
 
     # ------------------------------------------------------------------
+    # Global GUI lock
+    # ------------------------------------------------------------------
+    def _toggle_lock(self):
+        """Called from the hotkey listener thread via root.after - only
+        touches Tk on the main thread."""
+        if self.locked:
+            self._unlock_gui()
+        else:
+            self._lock_gui()
+
+    def _lock_gui(self):
+        if self.locked:
+            return
+        self.locked = True
+
+        self.root.update_idletasks()
+        x, y = self.root.winfo_rootx(), self.root.winfo_rooty()
+        w, h = self.root.winfo_width(), self.root.winfo_height()
+
+        overlay = tk.Toplevel(self.root)
+        overlay.overrideredirect(True)
+        overlay.geometry(f"{w}x{h}+{x}+{y}")
+        overlay.configure(bg="#000000")
+        try:
+            overlay.attributes("-alpha", 0.72)
+        except tk.TclError:
+            pass
+        overlay.attributes("-topmost", True)
+
+        tk.Label(overlay, text="LOCKED", bg="#000000", fg=FG,
+                font=("Segoe UI Semibold", 22)).place(relx=0.5, rely=0.46, anchor="center")
+        tk.Label(overlay, text="Press  -  to unlock", bg="#000000", fg=MUTED,
+                font=("Segoe UI", 11)).place(relx=0.5, rely=0.54, anchor="center")
+
+        self._lock_overlay = overlay
+        self._lock_follow_id = self.root.bind("<Configure>", self._sync_lock_overlay, add="+")
+        print("GUI locked. Press '-' to unlock.")
+
+    def _sync_lock_overlay(self, _event=None):
+        if not self._lock_overlay:
+            return
+        x, y = self.root.winfo_rootx(), self.root.winfo_rooty()
+        w, h = self.root.winfo_width(), self.root.winfo_height()
+        self._lock_overlay.geometry(f"{w}x{h}+{x}+{y}")
+
+    def _unlock_gui(self):
+        if not self.locked:
+            return
+        self.locked = False
+        if self._lock_follow_id:
+            self.root.unbind("<Configure>", self._lock_follow_id)
+            self._lock_follow_id = None
+        if self._lock_overlay:
+            self._lock_overlay.destroy()
+            self._lock_overlay = None
+        print("GUI unlocked.")
+
+    # ------------------------------------------------------------------
     # Hotkeys
     # ------------------------------------------------------------------
     def _start_hotkey_listener(self):
@@ -464,13 +525,23 @@ class BotGUI:
         auto_key = HOTKEYS["AUTO_ATTACK"]["key"]
         kill_key = HOTKEYS["KILL"]["key"]
         stop_key = HOTKEYS["STOP"]["key"]
+        lock_key = HOTKEYS["LOCK"]["key"]
 
         def on_press(key):
             char = getattr(key, "char", None)
 
-            # --- KILL ALWAYS WORKS, even mid-recording / while naming ---
+            # --- KILL ALWAYS WORKS, even mid-recording / while naming / while locked ---
             if char == kill_key:
                 self.quit_app()
+                return
+
+            # --- LOCK toggle ALWAYS WORKS, so a locked GUI can be unlocked again ---
+            if char == lock_key:
+                self.root.after(0, self._toggle_lock)
+                return
+
+            # --- While the GUI is locked, no other hotkey does anything ---
+            if self.locked:
                 return
 
             # --- While the "name this sequence" dialog is up, ignore every

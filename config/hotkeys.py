@@ -8,5 +8,6 @@ HOTKEYS = {
     "AUTO_ATTACK":      { "key": "z", "description": "Auto Attack Cycle" },
     "STOP":             { "key": "ä", "description": "Stop" },
     "CONFIGURE":        { "key": "c", "description": "Configure" },
-    "RECORD_SEQUENCE":  { "key": "Home", "description": "Start/Stop Recording Sequence" }
+    "RECORD_SEQUENCE":  { "key": "Home", "description": "Start/Stop Recording Sequence" },
+    "LOCK":             { "key": "-", "description": "Lock/Unlock GUI" }
 }
